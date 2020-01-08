@@ -1,5 +1,5 @@
 # telink_light_cpp
-C++ classes to handle a Bluetooth LE light with Telink mesh protocol. Telink chips can be found for instance in cheap connected light bulbs from Lidl (Livarno LUX brand), or from Briloner Leuchten GmbH.
+C++ classes to handle a Bluetooth LE light with Telink mesh protocol. Telink chips can be found for instance in cheap connected light bulbs from Lidl (Livarno LUX brand), from Briloner Leuchten GmbH, or C by GE connected lighting.
 
 The command set is derived from Telink demo apps together with an analysis of the Briloner Control phone app. Since the app makes use of only a small subset of the available features and Telink's documentation on the subject is between absconse and inexistant, it is probable that some potential features will never be implemented. For now, basic light control (power on/off, change brightness, temperature, color) is working fine.
 
