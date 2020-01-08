@@ -23,7 +23,7 @@ On command line, in source folder, type:
 
 # Usage of C++ classes
 At the moment I didn't write a compilation script to produce a library. Therefore one must take care of including the header and the cxx file in one's own source tree.
-For details on class methods and features, see documentation in files (one can use doxygen to produce documentation files, if wished).
+For details on class methods and features, see documentation in doc folder.
 
 # Usage of example program
 ` $ sudo ./telink_test`
