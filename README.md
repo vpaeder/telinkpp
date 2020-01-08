@@ -11,9 +11,10 @@ Parts of the key exchange and packet encryption/decryption routines are inspired
 - CMake (for compilation, optional) - https://cmake.org
 - Doxygen (for docs, optional) - http://doxygen.nl
 
-# Compilation
+# Compiling
 Make sure to change MAC address, device name and password in telink_test.cxx before compiling.
-This can be done easily with CMake using the provided CMakeLists.txt file.
+
+Compiling can be done easily with CMake using the provided CMakeLists.txt file.
 On command line, in source folder, type:
 ```
  $ mkdir build && cd build
