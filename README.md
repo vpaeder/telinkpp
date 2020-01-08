@@ -11,6 +11,8 @@ Parts of the key exchange and packet encryption/decryption routines are inspired
 - CMake (for compilation, optional) - https://cmake.org
 - Doxygen (for docs, optional) - http://doxygen.nl
 
+Note that you need a system on which TinyB works. In practice this means some blend of Linux. I tested it on Raspbian.
+
 # Compiling
 Make sure to change MAC address, device name and password in telink_test.cxx before compiling.
 
