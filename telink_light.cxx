@@ -62,12 +62,12 @@ namespace telink {
     this->send_packet(COMMAND_LIGHT_ON_OFF, {on_off, 0, 0});
   }
   
-  void TelinkLight::query_mesh_id(int mesh_id) override {
+  void TelinkLight::set_mesh_id(int mesh_id) {
     TelinkMesh::set_mesh_id(mesh_id);
     this->send_packet(COMMAND_ADDRESS_EDIT, {(char)(mesh_id & 0xff), (char)((mesh_id >> 8) & 0xff)});
   }
   
-  void TelinkLight::get_mesh_id() {
+  void TelinkLight::query_mesh_id() {
     this->send_packet(COMMAND_ADDRESS_EDIT, {0xff, 0xff});
   }
   
@@ -90,6 +90,10 @@ namespace telink {
   
   void TelinkLight::set_music_mode(bool music_mode) {
     this->music_mode = music_mode;
+  }
+  
+  void TelinkLight::load_mode(unsigned char mode_id, unsigned char speed) {
+    this->send_packet(COMMAND_LIGHT_MODE_LOAD, {mode_id, speed, this->brightness});
   }
   
   
