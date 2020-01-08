@@ -29,4 +29,4 @@ At the moment I didn't write a compilation script to produce a library. Therefor
 For details on class methods and features, see documentation in doc folder.
 
 # Usage of example program
-` $ sudo ./telink_test`
+` $ sudo ./telink_test <device_MAC_address> <device_name> <device_password>`
