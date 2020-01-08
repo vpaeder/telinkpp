@@ -1,0 +1,25 @@
+var classtelink_1_1_telink_light =
+[
+    [ "TelinkLight", "classtelink_1_1_telink_light.html#a58f194f199733fed2623ab51a4a1f759", null ],
+    [ "add_group", "classtelink_1_1_telink_light.html#a3ba2ffbad42ce513d354b967e7c593f7", null ],
+    [ "add_scene", "classtelink_1_1_telink_light.html#ae8ede2242996a9dc599597fa0542209d", null ],
+    [ "parse_command", "classtelink_1_1_telink_light.html#ad04c5f09678e2300bc38fec53dc24345", null ],
+    [ "query_alarm", "classtelink_1_1_telink_light.html#ab1bbc227d2e99c4684bf1da2e5cbe5d5", null ],
+    [ "query_device_info", "classtelink_1_1_telink_light.html#ac4235b8d44135da902ea22395358311d", null ],
+    [ "query_device_version", "classtelink_1_1_telink_light.html#ae8076cddaf11493643a15d365b80358d", null ],
+    [ "query_group_id", "classtelink_1_1_telink_light.html#a74f0532a17172e696bd857e6edf599b2", null ],
+    [ "query_mesh_id", "classtelink_1_1_telink_light.html#a8c48180ba63a8b914d09499064b4e463", null ],
+    [ "query_scene", "classtelink_1_1_telink_light.html#a2c451fb577da834c5a4bd05b43866111", null ],
+    [ "query_status", "classtelink_1_1_telink_light.html#a73bea50db51810023449de5da0cad893", null ],
+    [ "query_time", "classtelink_1_1_telink_light.html#a838f435dd61c487fa23f18f10df26a9e", null ],
+    [ "set_brightness", "classtelink_1_1_telink_light.html#ac8b4dbee4741bc2825f623a203ff6aca", null ],
+    [ "set_color", "classtelink_1_1_telink_light.html#a1398bad30a1e132146ca4c40aa452255", null ],
+    [ "set_mesh_id", "classtelink_1_1_telink_light.html#a8d653c8d96fe37d1e8125767d47fa406", null ],
+    [ "set_music_mode", "classtelink_1_1_telink_light.html#abb25b93000a2d095e65f9d21a18c5678", null ],
+    [ "set_state", "classtelink_1_1_telink_light.html#aceeee6ee5247506d9c7eec1cd50471a3", null ],
+    [ "set_temperature", "classtelink_1_1_telink_light.html#a53ef9dfe11a9ae330b73ee4029ce673a", null ],
+    [ "set_time", "classtelink_1_1_telink_light.html#a7d5a51b302c023bf90b7723ece21749d", null ],
+    [ "brightness", "classtelink_1_1_telink_light.html#a9bfb51b86cb11485e9e4bd1926594cad", null ],
+    [ "music_mode", "classtelink_1_1_telink_light.html#a44eca52982ac430c5b07820c2f3a9624", null ],
+    [ "state", "classtelink_1_1_telink_light.html#a3db33677ed9c102049f5d263d24ee3f2", null ]
+];
