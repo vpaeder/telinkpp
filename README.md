@@ -14,9 +14,7 @@ Parts of the key exchange and packet encryption/decryption routines are inspired
 Note that you need a system on which TinyB works. In practice this means some blend of Linux with the BlueZ stack. I tested it on Raspbian.
 
 # Compiling
-Make sure to change MAC address, device name and password in telink_test.cxx before compiling.
-
-Compiling can be done easily with CMake using the provided CMakeLists.txt file.
+This can be done easily with CMake using the provided CMakeLists.txt file.
 On command line, in source folder, type:
 ```
  $ mkdir build && cd build
