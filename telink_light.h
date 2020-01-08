@@ -30,8 +30,8 @@ namespace telink {
   #define COMMAND_SCENE_LOAD            0xEF
   #define COMMAND_LIGHT_ON_OFF          0xF0
   #define COMMAND_LIGHT_ATTRIBUTES      0xF1
+  #define COMMAND_LIGHT_MODE_LOAD       0xF2
   #define COMMAND_LIGHT_MODE_EDIT       0xF3
-  #define COMMAND_LIGHT_MODE_LOAD       0xF4
   
   /** \class TelinkLight
    *  \brief Class handling a Bluetooth LE light with Telink mesh protocol.
@@ -162,5 +162,12 @@ namespace telink {
      *  \param music_mode : state of music mode to set.
      */
     void set_music_mode(bool music_mode);
+    
+    /** \fn load_mode(unsigned char mode_id)
+     *  \brief Loads the mode with given mode ID on device.
+     *  \param mode_id : mode ID
+     *  \param speed : mode animation speed
+     */
+    void load_mode(unsigned char mode_id, unsigned char speed);
   };
 }
