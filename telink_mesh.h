@@ -68,12 +68,12 @@ namespace telink {
      */
     std::unique_ptr<BluetoothGattCharacteristic> notification_char;
     
-    /** \property std::unique_ptr<BluetoothGattCharacteristic> notification_char
+    /** \property std::unique_ptr<BluetoothGattCharacteristic> command_char
      *  \brief TinyB object for command Bluetooth GATT characteristic.
      */
     std::unique_ptr<BluetoothGattCharacteristic> command_char;
     
-    /** \property std::unique_ptr<BluetoothGattCharacteristic> notification_char
+    /** \property std::unique_ptr<BluetoothGattCharacteristic> pair_char
      *  \brief TinyB object for pairing Bluetooth GATT characteristic.
      */
     std::unique_ptr<BluetoothGattCharacteristic> pair_char;
@@ -167,7 +167,7 @@ namespace telink {
     
     /** \fn void set_password(const std::string password)
      *  \brief Sets the password to be used for connecting.
-     *  \param name : password.
+     *  \param password : password.
      */
     void set_password(const std::string password);
     
@@ -178,8 +178,8 @@ namespace telink {
     void set_vendor(int vendor);
     
     /** \fn virtual void set_mesh_id(int mesh_id)
-     *  \brief Sets the Bluetooth vendor code (0x0211 for Telink).
-     *  \param vendor : vendor code.
+     *  \brief Sets the device ID on the mesh.
+     *  \param mesh_id : mesh ID, from 1 to 254.
      */
     virtual void set_mesh_id(int mesh_id);
   
