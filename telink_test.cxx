@@ -7,33 +7,6 @@
 #include <iostream>
 
 #include "telink_light.h"
-
-// mode ID definitions 
-#define MODE_SEA 0x8e
-#define MODE_COLD 0x89
-#define MODE_3_COLOR_GRADIENT 0x90
-#define MODE_3_COLOR_JUMP 0x8f
-#define MODE_6_COLOR_GRADIENT 0x8a
-#define MODE_6_COLOR_JUMP 0x8b
-#define MODE_7_COLOR_GRADIENT 0x92
-#define MODE_7_COLOR_JUMP 0x91
-#define MODE_DINNER 0x87
-#define MODE_FLAME 0x97
-#define MODE_FOREST 0x96
-#define MODE_FREQUENCY 0x83
-#define MODE_GRADIENT 0x82
-#define MODE_JUMP 0x81
-#define MODE_LOOP 0x84
-#define MODE_MORNING 0x85
-#define MODE_NOON 0x86
-#define MODE_RGB_DINNER 0x95
-#define MODE_RGB_MORNING 0x93
-#define MODE_RGB_NOON 0x94
-#define MODE_RED_GRADIENT 0x8d
-#define MODE_RELAX 0x98
-#define MODE_WARN 0x88
-#define MODE_WHITE 0x8c
-#define MODE_WORK 0x99
 	
 int main(int argc, char **argv) {
 
@@ -59,6 +32,21 @@ int main(int argc, char **argv) {
 	std::this_thread::sleep_for(std::chrono::seconds(5));
 	
   ble_light.set_music_mode(true); // set device to music mode
+  
+  // create custom mode
+  TelinkLightMode custom_mode;
+  // add 6 colors to mode
+  for (int i=0; i<6; i++) {
+    TelinkColor colorn(255, i*40, 255-i*40, 100);
+    custom_mode.add_color(colorn);
+  }
+  // set custom mode on device as custom mode 3
+  ble_light.edit_mode(MODE_CUSTOM_3, custom_mode);
+  // set light in new custom mode, with speed = 3
+	ble_light.load_mode(MODE_CUSTOM_3, 3);
+  // set alarm with custom mode to turn on at 12:30:00 every day except Sunday
+  std::vector<bool> days = {false, true, true, true, true, true, true};
+  ble_light.set_alarm(1, days, 12, 30, 0, MODE_CUSTOM_3);
   
   /* initialize random seed: */
   std::srand(time(NULL));
