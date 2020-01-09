@@ -177,7 +177,7 @@ namespace telink {
   }
 
   std::string TelinkMesh::encrypt_packet(std::string & packet) const {
-    std::string auth_nonce = this->reverse_address.substr(0,4) + (char)1 + packet.substr(0,3) + (char)15;
+    std::string auth_nonce = this->reverse_address.substr(0,4) + '\1' + packet.substr(0,3) + '\x0f';
     auth_nonce.append(7,0);
     std::string authenticator = encrypt(this->shared_key, auth_nonce);
     for (int i=0; i<15; i++)
@@ -188,7 +188,7 @@ namespace telink {
     for (int i=0; i<2; i++)
       packet[i+3] = mac[i];
   
-    std::string iv = (char)0 + this->reverse_address.substr(0,4) + (char)1 + packet.substr(0,3);
+    std::string iv = '\0' + this->reverse_address.substr(0,4) + '\1' + packet.substr(0,3);
     iv.append(7,0);
     std::string buffer = encrypt(this->shared_key, iv);
   
@@ -199,7 +199,7 @@ namespace telink {
   }
 
   std::string TelinkMesh::decrypt_packet(std::string & packet) const {
-    std::string iv = (char)0 + this->reverse_address.substr(0,3) + packet.substr(0,5);
+    std::string iv = '\0' + this->reverse_address.substr(0,3) + packet.substr(0,5);
     iv.append(7,0);
     std::string result = encrypt(this->shared_key, iv);
     for (int i=0; i<packet.size()-7; i++)
@@ -287,7 +287,7 @@ namespace telink {
     // 2nd part of key is encrypted with mesh name and password
     data.append(8,0);
     std::string enc_data = this->key_encrypt(data);
-    std::string packet = (char)0x0c + data.substr(0,8) + enc_data.substr(0,8);
+    std::string packet = '\x0c' + data.substr(0,8) + enc_data.substr(0,8);
   
     /* send public key to device and get response */
     this->pair_char->write_value(to_vector(packet));
