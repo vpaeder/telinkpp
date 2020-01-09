@@ -3,6 +3,9 @@
  *  Author: Vincent Paeder
  *  License: GPL v3
  */
+#ifndef __TELINK_MESH_H__
+#define __TELINK_MESH_H__
+
 #include <string>
 #include <vector>
 #include <tinyb.hpp>
@@ -203,3 +206,5 @@ namespace telink {
   };
   
 }
+
+#endif // __TELINK_MESH_H__
