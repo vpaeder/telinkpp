@@ -10,7 +10,7 @@ Parts of the key exchange and packet encryption/decryption routines are inspired
  * change brightness
  * change color / temperature
  * set alarms
- * edit custom light modes (cycles)
+ * edit custom light modes (a.k.a. scenarios)
  * select light modes
 
 ##### Not implemented yet or not tested
