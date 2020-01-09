@@ -211,8 +211,8 @@ namespace telink {
       // NOTE: from specs, received_id == 0xffff targets all connected devices,
       //  but presently received_id will never exceed 0xff.
       // received_id == 0 targets the connected device only
+      
       if (packet[7] == COMMAND_ONLINE_STATUS_REPORT) {
-        // check that mesh ID corresponds
         this->brightness = packet[12];
         this->state = ~(packet[13] & 1);
       
@@ -224,7 +224,6 @@ namespace telink {
         unsigned char W = packet[15];
       
       } else if (packet[7] == COMMAND_TIME_REPORT) {
-        // check that mesh ID corresponds
         unsigned int year = packet[10] + (packet[11] << 8);
         unsigned char month = packet[12];
         unsigned char day = packet[13];
