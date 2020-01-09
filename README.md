@@ -15,7 +15,6 @@ Parts of the key exchange and packet encryption/decryption routines are inspired
 
 ##### Not implemented yet or not tested
  * Device groups
- * Scenes
  * Most device replies to queries
 
 # Requirements
