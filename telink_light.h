@@ -11,10 +11,13 @@
 namespace telink {
   
   // Command codes
-  #define COMMAND_SCENE_QUERY           0xC0
-  #define COMMAND_SCENE_REPORT          0xC1
-  #define COMMAND_SCENE_EDIT            0xEE
-  #define COMMAND_SCENE_LOAD            0xEF
+  #define COMMAND_SCENARIO_QUERY        0xC0
+  #define COMMAND_SCENARIO_REPORT       0xC1
+  #define COMMAND_SCENARIO_LOAD         0xF2
+  #define COMMAND_SCENARIO_EDIT         0xF3
+  #define COMMAND_OTA_UPDATE            0xC6
+  #define COMMAND_QUERY_OTA_STATE       0xC7
+  #define COMMAND_OTA_STATUS_REPORT     0xC8
   #define COMMAND_GROUP_ID_QUERY        0xDD
   #define COMMAND_GROUP_ID_REPORT       0xD4
   #define COMMAND_GROUP_EDIT            0xD7
@@ -34,41 +37,39 @@ namespace telink {
   #define COMMAND_DEVICE_INFO_REPORT    0xEB
   #define COMMAND_LIGHT_ON_OFF          0xF0
   #define COMMAND_LIGHT_ATTRIBUTES_SET  0xF1
-  #define COMMAND_LIGHT_MODE_LOAD       0xF2
-  #define COMMAND_LIGHT_MODE_EDIT       0xF3
 
 
-  // mode ID definitions
-  #define MODE_CUSTOM_1 0x00
-  #define MODE_CUSTOM_2 0x01
-  #define MODE_CUSTOM_3 0x02
-  #define MODE_CUSTOM_4 0x03
-  #define MODE_SEA 0x8e
-  #define MODE_COLD 0x89
-  #define MODE_3_COLOR_GRADIENT 0x90
-  #define MODE_3_COLOR_JUMP 0x8f
-  #define MODE_6_COLOR_GRADIENT 0x8a
-  #define MODE_6_COLOR_JUMP 0x8b
-  #define MODE_7_COLOR_GRADIENT 0x92
-  #define MODE_7_COLOR_JUMP 0x91
-  #define MODE_DINNER 0x87
-  #define MODE_FLAME 0x97
-  #define MODE_FOREST 0x96
-  #define MODE_FREQUENCY 0x83
-  #define MODE_GRADIENT 0x82
-  #define MODE_JUMP 0x81
-  #define MODE_LOOP 0x84
-  #define MODE_MORNING 0x85
-  #define MODE_NOON 0x86
-  #define MODE_RGB_DINNER 0x95
-  #define MODE_RGB_MORNING 0x93
-  #define MODE_RGB_NOON 0x94
-  #define MODE_RED_GRADIENT 0x8d
-  #define MODE_RELAX 0x98
-  #define MODE_WARN 0x88
-  #define MODE_WHITE 0x8c
-  #define MODE_WORK 0x99
-  #define MODE_DEFAULT 0xff
+  // scenario ID definitions
+  #define SCENARIO_CUSTOM_1 0x00
+  #define SCENARIO_CUSTOM_2 0x01
+  #define SCENARIO_CUSTOM_3 0x02
+  #define SCENARIO_CUSTOM_4 0x03
+  #define SCENARIO_SEA 0x8e
+  #define SCENARIO_COLD 0x89
+  #define SCENARIO_3_COLOR_GRADIENT 0x90
+  #define SCENARIO_3_COLOR_JUMP 0x8f
+  #define SCENARIO_6_COLOR_GRADIENT 0x8a
+  #define SCENARIO_6_COLOR_JUMP 0x8b
+  #define SCENARIO_7_COLOR_GRADIENT 0x92
+  #define SCENARIO_7_COLOR_JUMP 0x91
+  #define SCENARIO_DINNER 0x87
+  #define SCENARIO_FLAME 0x97
+  #define SCENARIO_FOREST 0x96
+  #define SCENARIO_FREQUENCY 0x83
+  #define SCENARIO_GRADIENT 0x82
+  #define SCENARIO_JUMP 0x81
+  #define SCENARIO_LOOP 0x84
+  #define SCENARIO_MORNING 0x85
+  #define SCENARIO_NOON 0x86
+  #define SCENARIO_RGB_DINNER 0x95
+  #define SCENARIO_RGB_MORNING 0x93
+  #define SCENARIO_RGB_NOON 0x94
+  #define SCENARIO_RED_GRADIENT 0x8d
+  #define SCENARIO_RELAX 0x98
+  #define SCENARIO_WARN 0x88
+  #define SCENARIO_WHITE 0x8c
+  #define SCENARIO_WORK 0x99
+  #define SCENARIO_DEFAULT 0xff
   
   
   /** \class TelinkColor
@@ -176,26 +177,26 @@ namespace telink {
   };
   
   
-  /** \class TelinkLightMode
-   *  \brief Class representing a light mode.
+  /** \class TelinkScenario
+   *  \brief Class representing a scenario.
    */
-  class TelinkLightMode {
+  class TelinkScenario {
   private:
     /** \property std::vector<TelinkColor> colors
-     *  \brief List of mode colors.
+     *  \brief List of scenario colors.
      */
     std::vector<TelinkColor> colors;
     
     /** \property std::vector<unsigned char> speeds
-     *  \brief List of speeds associated with mode colors.
+     *  \brief List of speeds associated with scenario colors.
      */
     std::vector<unsigned char> speeds;
     
   public:
-    /** \fn TelinkLightMode()
+    /** \fn TelinkScenario()
      *  \brief Object instantiation.
      */
-    TelinkLightMode() {}
+    TelinkScenario() {}
     
     /** \fn void add_color(TelinkColor color, unsigned char speed)
      *  \brief Adds a color to the list.
@@ -279,10 +280,10 @@ namespace telink {
      */
     TelinkLight(const std::string address, const std::string name, const std::string password) : TelinkMesh(address, name, password) {}
     
-    /** \fn void query_group_id()
-     *  \brief Queries mesh group ID from device.
+    /** \fn void query_groups()
+     *  \brief Queries mesh group IDs from device.
      */
-    void query_group_id();
+    void query_groups();
     
     /** \fn void set_time()
      *  \brief Sets device date and time.
@@ -309,10 +310,10 @@ namespace telink {
      */
     void query_device_version();
     
-    /** \fn void query_scene()
-     *  \brief Queries scene from device.
+    /** \fn void query_scenarios()
+     *  \brief Queries scenarios from device.
      */
-    void query_scene();
+    void query_scenarios();
     
     /** \fn void query_status()
      *  \brief Queries device status.
@@ -332,7 +333,7 @@ namespace telink {
     
     /** \fn void set_mesh_id(int mesh_id) override
      *  \brief Sets device mesh ID.
-     *  \param mesh_id : mesh ID to set
+     *  \param mesh_id : mesh ID to set, from 1 to 254 for single device ID, and from 0x8000 to 0x80ff for group ID
      */
     void set_mesh_id(int mesh_id) override;
     
@@ -342,11 +343,23 @@ namespace telink {
      */
     void add_group(unsigned char group_id);
     
-    /** \fn void add_scene(unsigned char scene_id)
-     *  \brief Adds device to given scene.
-     *  \param scene_id : ID of the scene to add device to.
+    /** \fn void delete_group(unsigned char group_id)
+     *  \brief Removes device from given group.
+     *  \param group_id : ID of the group to remove device from.
      */
-    void add_scene(unsigned char scene_id);
+    void delete_group(unsigned char group_id);
+   
+    /** \fn void add_scenario(unsigned char scenario_id)
+     *  \brief Adds given scenario to device.
+     *  \param scenario_id : ID of the scenario to add to device.
+     */
+    void add_scenario(unsigned char scenario_id);
+    
+    /** \fn void delete_scenario(unsigned char scenario_id)
+     *  \brief Deletes given scenario from device.
+     *  \param scenario_id : ID of the scenario to remove from device.
+     */
+    void delete_scenario(unsigned char scenario_id);
     
     /** \fn void set_brightness(int brightness)
      *  \brief Sets light brightness.
@@ -374,12 +387,12 @@ namespace telink {
      */
     void set_music_mode(bool music_mode);
     
-    /** \fn load_mode(unsigned char mode_id)
-     *  \brief Loads the mode with given mode ID on device.
-     *  \param mode_id : mode ID
-     *  \param speed : mode animation speed
+    /** \fn load_scenario(unsigned char scenario_id)
+     *  \brief Loads the scenario with given scenario ID on device.
+     *  \param scenario_id : scenario ID
+     *  \param speed : scenario animation speed
      */
-    void load_mode(unsigned char mode_id, unsigned char speed);
+    void load_scenario(unsigned char scenario_id, unsigned char speed);
     
     /** \fn void set_alarm(unsigned char alarm_id, const std::vector<bool> & weekdays, unsigned char hour, unsigned char minute, unsigned char second, unsigned char action)
      *  \brief Sets an alarm with given parameters.
@@ -388,7 +401,7 @@ namespace telink {
      *  \param hour : hour of the alarm
      *  \param minute : minute of the alarm
      *  \param second : second of the alarm
-     *  \param action : what is done when the alarm triggers; 0 = switch off, 1 = switch on, >1 = start mode with corresponding number
+     *  \param action : what is done when the alarm triggers; 0 = switch off, 1 = switch on, >1 = start scenario with corresponding number
      */
     void set_alarm(unsigned char alarm_id, const std::vector<bool> & weekdays, unsigned char hour, unsigned char minute, unsigned char second, unsigned char action);
     
@@ -405,12 +418,60 @@ namespace telink {
      */
     void delete_alarm(unsigned char alarm_id);
     
-    /** \fn void edit_mode(unsigned char mode_id, const TelinkLightMode & light_mode)
-     *  \brief Edits a light mode. A light mode is a series of colors that are cycled through.
-     *  \param mode_id : index of the mode
-     *  \param light_mode : light mode definition
+    /** \fn void edit_scenario(unsigned char scenario_id, const TelinkScenario & light_scenario)
+     *  \brief Edits a light scenario. A light scenario is a series of colors that are cycled through.
+     *  \param scenario_id : index of the scenario
+     *  \param scenario : light scenario definition
      */
-    void edit_mode(unsigned char mode_id, TelinkLightMode & light_mode);
+    void edit_scenario(unsigned char scenario_id, TelinkScenario & scenario);
+    
+    /** \fn virtual void parse_online_status_report(const std::string & packet)
+     *  \brief Parses a command packet from an online status report.
+     *  \param packet : decrypted packet to be parsed.
+     */
+    virtual void parse_online_status_report(const std::string & packet);
+    
+    /** \fn virtual void parse_status_report(const std::string & packet)
+     *  \brief Parses a command packet from a device status report.
+     *  \param packet : decrypted packet to be parsed.
+     */
+    virtual void parse_status_report(const std::string & packet);
+    
+    /** \fn virtual void parse_time_report(const std::string & packet)
+     *  \brief Parses a command packet from a time report.
+     *  \param packet : decrypted packet to be parsed.
+     */
+    virtual void parse_time_report(const std::string & packet);
+    
+    /** \fn virtual void parse_address_report(const std::string & packet)
+     *  \brief Parses a command packet from an address report.
+     *  \param packet : decrypted packet to be parsed.
+     */
+    virtual void parse_address_report(const std::string & packet);
+    
+    /** \fn virtual void parse_alarm_report(const std::string & packet)
+     *  \brief Parses a command packet from an alarm report.
+     *  \param packet : decrypted packet to be parsed.
+     */
+    virtual void parse_alarm_report(const std::string & packet);
+    
+    /** \fn virtual void parse_device_info_report(const std::string & packet)
+     *  \brief Parses a command packet from a device info report.
+     *  \param packet : decrypted packet to be parsed.
+     */
+    virtual void parse_device_info_report(const std::string & packet);
+    
+    /** \fn virtual void parse_group_id_report(const std::string & packet)
+     *  \brief Parses a command packet from a group ID report.
+     *  \param packet : decrypted packet to be parsed.
+     */
+    virtual void parse_group_id_report(const std::string & packet);
+    
+    /** \fn virtual void parse_scenario_report(const std::string & packet)
+     *  \brief Parses a command packet from a scenario report.
+     *  \param packet : decrypted packet to be parsed.
+     */
+    virtual void parse_scenario_report(const std::string & packet);
   };
 }
 
