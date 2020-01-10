@@ -1,7 +1,7 @@
 # telink_light_cpp
 C++ classes to handle a Bluetooth LE light with Telink mesh protocol. Telink chips can be found for instance in cheap connected light bulbs from Lidl (Livarno LUX brand), from Briloner Leuchten GmbH, or C by GE connected lighting.
 
-The command set is derived from Telink demo apps together with an analysis of the Briloner Control phone app. Since the app makes use of only a small subset of the available features and Telink's documentation on the subject is between absconse and inexistant, it is probable that some potential features will never be implemented.
+The command set is derived from Telink demo apps together with an analysis of the Briloner Control phone app. Since the app makes use of a subset of the available features and Telink's documentation on the subject is between absconse and inexistant, it is probable that some features will never be implemented.
 
 Parts of the key exchange and packet encryption/decryption routines are inspired from https://github.com/google/python-dimond .
 
@@ -14,10 +14,11 @@ Parts of the key exchange and packet encryption/decryption routines are inspired
  * select scenarios
  * device groups (use mesh ID 0x8000 + group ID to communicate with defined groups)
 
-##### Not implemented yet or not tested
- * some device replies to queries
+##### Not implemented
  * device reset
  * OTA operations
+
+Device replies are treated minimally to demonstrate what data packets contain. Queries are treated asynchronously.
 
 # Requirements
 - Intel TinyB - https://github.com/intel-iot-devkit/tinyb
