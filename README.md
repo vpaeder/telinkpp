@@ -10,13 +10,13 @@ Parts of the key exchange and packet encryption/decryption routines are inspired
  * change brightness
  * change color / temperature
  * set alarms
- * edit custom light modes (a.k.a. scenarios)
- * select light modes
+ * edit custom scenarios
+ * select scenarios
+ * device groups (use mesh ID 0x8000 + group ID to communicate with defined groups)
 
 ##### Not implemented yet or not tested
- * Device groups
- * Most device replies to queries
- * Device reset
+ * some device replies to queries
+ * device reset
  * OTA operations
 
 # Requirements
