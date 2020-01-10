@@ -99,8 +99,8 @@ namespace telink {
     this->send_packet(COMMAND_DEVICE_INFO_QUERY, {0x10, 0x02});
   }
   
-  void TelinkLight::query_scenarios() {
-    this->send_packet(COMMAND_SCENARIO_QUERY, {0x0A, 0x01});
+  void TelinkLight::query_scenario(unsigned char scenario_id) {
+    this->send_packet(COMMAND_SCENARIO_QUERY, {0, 0, scenario_id, 0xff});
   }
   
   void TelinkLight::query_status() {
@@ -260,10 +260,10 @@ namespace telink {
   }
   
   void TelinkLight::parse_device_info_report(const std::string & packet) {
+    // unfortunately, no code or datasheet seems to be available to explain
+    // the content of these packets, except for the 2 conditions below
     if (packet[19] == 0) { // packet contains device info
-      
     } else if (packet[19] == 2) { // packet contains device version
-      
     }
   }
   
@@ -274,6 +274,16 @@ namespace telink {
   }
   
   void TelinkLight::parse_scenario_report(const std::string & packet) {
+    int scenario_size = packet[12] & 0xf;
+    int scenario_id = packet[10];
+    int color_speed = packet[11] - 0x10;
+    int color_index = (packet[12] - scenario_size) >> 4;
+    int color_brightness = packet[13];
+    int color_R = packet[14];
+    int color_G = packet[15];
+    int color_B = packet[16];
+    int color_Y = packet[17];
+    int color_W = packet[18];
   }
   
   void TelinkLight::parse_command(const std::string & packet) {
