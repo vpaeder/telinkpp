@@ -110,8 +110,9 @@ namespace telink {
   public:
     /** \fn TelinkColor(unsigned char R, unsigned char G, unsigned char B, unsigned char brightness)
      *  \brief Object instantiation.
-     *  \param Y : CCT Y value
-     *  \param W : CCT W value
+     *  \param R : red component, from 0 to 255
+     *  \param G : green component, from 0 to 255
+     *  \param B : blue component, from 0 to 255
      *  \param brightness : brightness value, from 0 to 100%
      */
     TelinkColor(unsigned char R, unsigned char G, unsigned char B, unsigned char brightness) {
@@ -121,9 +122,8 @@ namespace telink {
     
     /** \fn TelinkColor(unsigned char Y, unsigned char W, unsigned char brightness)
      *  \brief Object instantiation.
-     *  \param R : red component, from 0 to 255
-     *  \param G : green component, from 0 to 255
-     *  \param B : blue component, from 0 to 255
+     *  \param Y : CCT Y value
+     *  \param W : CCT W value
      *  \param brightness : brightness value, from 0 to 100%
      */
     TelinkColor(unsigned char Y, unsigned char W, unsigned char brightness) {
@@ -225,8 +225,9 @@ namespace telink {
     void remove_color(int color_index);
     
     /** \fn void set_speed(int color_index, unsigned char speed)
-     *  \brief Sets the speed for the given color; speed is an integer between 0 and 15.
+     *  \brief Sets the speed for the given color.
      *  \param color_index : index of the color to set the speed for
+     *  \param speed : associated speed; speed is an integer between 0 and 15
      */
     void set_speed(int color_index, unsigned char speed);
     
