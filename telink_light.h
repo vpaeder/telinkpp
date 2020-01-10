@@ -311,10 +311,11 @@ namespace telink {
      */
     void query_device_version();
     
-    /** \fn void query_scenarios()
-     *  \brief Queries scenarios from device.
+    /** \fn void query_scenario(unsigned char scenario_id)
+     *  \brief Queries scenario details from device.
+     *  \param scenario_id : index of scenario to get details of
      */
-    void query_scenarios();
+    void query_scenario(unsigned char scenario_id);
     
     /** \fn void query_status()
      *  \brief Queries device status.
