@@ -50,36 +50,36 @@ namespace telink {
   }
   
   
-  void TelinkLightMode::add_color(TelinkColor color, unsigned char speed) {
+  void TelinkScenario::add_color(TelinkColor color, unsigned char speed) {
     this->colors.push_back(color);
     this->speeds.push_back(speed & 0xf);
   }
   
-  void TelinkLightMode::add_color(TelinkColor color) {
+  void TelinkScenario::add_color(TelinkColor color) {
     this->add_color(color, 7);
   }
   
-  void TelinkLightMode::replace_color(int color_index, TelinkColor color) {
+  void TelinkScenario::replace_color(int color_index, TelinkColor color) {
     this->colors[color_index] = color;
   
   }
   
-  void TelinkLightMode::remove_color(int color_index) {
+  void TelinkScenario::remove_color(int color_index) {
     this->colors.erase(this->colors.begin() + color_index);
     this->speeds.erase(this->speeds.begin() + color_index);
   }
   
-  void TelinkLightMode::set_speed(int color_index, unsigned char speed) {
+  void TelinkScenario::set_speed(int color_index, unsigned char speed) {
     this->speeds[color_index] = speed & 0xf;
   }
   
-  std::string TelinkLightMode::get_bytes(int color_index) const {
+  std::string TelinkScenario::get_bytes(int color_index) const {
     std::string packet = {0, color_index == this->colors.size()-1, static_cast<char>(0x10 + this->speeds[color_index]), static_cast<char>(0x10*color_index + this->colors.size())};
     return packet + this->colors[color_index].get_bytes();
   }
   
   
-  void TelinkLight::query_group_id() {
+  void TelinkLight::query_groups() {
     this->send_packet(COMMAND_GROUP_ID_QUERY, {0x0A, 0x01});
   }
   
@@ -99,8 +99,8 @@ namespace telink {
     this->send_packet(COMMAND_DEVICE_INFO_QUERY, {0x10, 0x02});
   }
   
-  void TelinkLight::query_scene() {
-    this->send_packet(COMMAND_SCENE_QUERY, {0x0A, 0x01});
+  void TelinkLight::query_scenarios() {
+    this->send_packet(COMMAND_SCENARIO_QUERY, {0x0A, 0x01});
   }
   
   void TelinkLight::query_status() {
@@ -136,11 +136,19 @@ namespace telink {
   }
   
   void TelinkLight::add_group(unsigned char group_id) {
-    this->send_packet(COMMAND_GROUP_EDIT, {0x01, group_id, 0});
+    this->send_packet(COMMAND_GROUP_EDIT, {0x01, group_id, 0x80});
   }
   
-  void TelinkLight::add_scene(unsigned char scene_id) {
-    this->send_packet(COMMAND_SCENE_EDIT, {0x01, scene_id});
+  void TelinkLight::delete_group(unsigned char group_id) {
+    this->send_packet(COMMAND_GROUP_EDIT, {0x00, group_id, 0x80});
+  }
+  
+  void TelinkLight::add_scenario(unsigned char scenario_id) {
+    this->send_packet(COMMAND_SCENARIO_EDIT, {0x01, scenario_id});
+  }
+  
+  void TelinkLight::delete_scenario(unsigned char scenario_id) {
+    this->send_packet(COMMAND_SCENARIO_EDIT, {0x00, scenario_id});
   }
   
   void TelinkLight::set_brightness(int brightness) {
@@ -159,8 +167,8 @@ namespace telink {
     this->music_mode = music_mode;
   }
   
-  void TelinkLight::load_mode(unsigned char mode_id, unsigned char speed) {
-    this->send_packet(COMMAND_LIGHT_MODE_LOAD, {mode_id, speed, this->brightness});
+  void TelinkLight::load_scenario(unsigned char scenario_id, unsigned char speed) {
+    this->send_packet(COMMAND_SCENARIO_LOAD, {scenario_id, speed, this->brightness});
   }
   
   void TelinkLight::set_alarm(unsigned char alarm_id, const std::vector<bool> & weekdays, unsigned char hour, unsigned char minute, unsigned char second, unsigned char action) {
@@ -174,7 +182,7 @@ namespace telink {
     }
     // compile byte for days
     for (int i=0; i<weekdays.size(); i++)
-      data[4] += weekdays[i] << i;
+      data[4] |= weekdays[i] << i;
     
     this->send_packet(COMMAND_ALARM_EDIT, data);
   }
@@ -187,14 +195,85 @@ namespace telink {
     this->send_packet(COMMAND_ALARM_EDIT, {1, alarm_id});
   }
   
-  void TelinkLight::edit_mode(unsigned char mode_id, TelinkLightMode & light_mode) {
-    this->load_mode(0xff, 7); // mode need not be the edited one
+  void TelinkLight::edit_scenario(unsigned char scenario_id, TelinkScenario & scenario) {
+    this->load_scenario(0xff, 7); // scenario need not be the edited one
     
-    for (int i=0; i<light_mode.get_size(); i++) {
-      std::string packet = light_mode.get_bytes(i);
-      packet[0] = mode_id;
-      this->send_packet(COMMAND_LIGHT_MODE_EDIT, packet);
+    for (int i=0; i<scenario.get_size(); i++) {
+      std::string packet = scenario.get_bytes(i);
+      packet[0] = scenario_id;
+      this->send_packet(COMMAND_SCENARIO_EDIT, packet);
     }
+  }
+  
+  void TelinkLight::parse_online_status_report(const std::string & packet) {
+    this->brightness = packet[12];
+    this->state = ~(packet[13] & 1); // 0x40 = light on, 0x41 = light off
+  }
+  
+  void TelinkLight::parse_status_report(const std::string & packet) {
+    this->brightness = packet[10];
+    unsigned char R = packet[11];
+    unsigned char G = packet[12];
+    unsigned char B = packet[13];
+    unsigned char W = packet[15];
+  }
+  
+  void TelinkLight::parse_time_report(const std::string & packet) {
+    unsigned int year = packet[10] + (packet[11] << 8);
+    unsigned char month = packet[12];
+    unsigned char day = packet[13];
+    unsigned char hour = packet[14];
+    unsigned char minute = packet[15];
+    unsigned char second = packet[16];
+    char timestamp[9], datestamp[9];
+    std::sprintf( timestamp, "%02d:%02d:%02d", hour, minute, second );
+    std::sprintf( datestamp, "%04d-%02d-%02d", year, month, day );
+    std::cout << "Lamp date: " << datestamp << ", time: " << timestamp << std::endl;
+  }
+  
+  void TelinkLight::parse_address_report(const std::string & packet) {
+    unsigned char mesh_id = packet[10];
+    std::vector<unsigned char> mac_address(6);
+    for (int i=0; i<6; i++)
+      mac_address[i] = packet[12+i];
+  }
+  
+  void TelinkLight::parse_alarm_report(const std::string & packet) {
+    int alarm_count = packet[19];
+    unsigned char alarm_id = packet[11];
+    unsigned char alarm_action = packet[12];
+    unsigned char scenario_id = 0xff;
+    if (alarm_action & 2) // alarm action: use scenario with id = packet[18]
+      scenario_id = packet[18];
+    bool alarm_state = alarm_action >> 7;
+    std::vector<bool> weekdays(7);
+    for (int i=0; i<7; i++)
+      weekdays[i] = (packet[14] >> i) & 0x01;
+    
+    int hour = packet[15];
+    int minute = packet[16];
+    int second = packet[17];
+    
+    // packet[13] contains details on months, but since it isn't set
+    // in any example code I could find, I leave it aside for now
+    // packet[10] seems to always contain 0xA5
+  }
+  
+  void TelinkLight::parse_device_info_report(const std::string & packet) {
+    if (packet[19] == 0) { // packet contains device info
+      
+    } else if (packet[19] == 2) { // packet contains device version
+      
+    }
+  }
+  
+  void TelinkLight::parse_group_id_report(const std::string & packet) {
+    std::vector<unsigned char> groups(10);
+    for (int i=0; i<10; i++)
+      groups[i] = packet[10+i];
+  }
+  
+  void TelinkLight::parse_scenario_report(const std::string & packet) {
   }
   
   void TelinkLight::parse_command(const std::string & packet) {
@@ -213,44 +292,28 @@ namespace telink {
       // received_id == 0 targets the connected device only
       
       if (packet[7] == COMMAND_ONLINE_STATUS_REPORT) {
-        this->brightness = packet[12];
-        this->state = ~(packet[13] & 1);
+        this->parse_online_status_report(packet);
       
       } else if (packet[7] == COMMAND_STATUS_REPORT) {
-        this->brightness = packet[10];
-        unsigned char R = packet[11];
-        unsigned char G = packet[12];
-        unsigned char B = packet[13];
-        unsigned char W = packet[15];
-      
+        this->parse_status_report(packet);
+        
       } else if (packet[7] == COMMAND_TIME_REPORT) {
-        unsigned int year = packet[10] + (packet[11] << 8);
-        unsigned char month = packet[12];
-        unsigned char day = packet[13];
-        unsigned char hour = packet[14];
-        unsigned char minute = packet[15];
-        unsigned char second = packet[16];
-        char timestamp[9], datestamp[9];
-        std::sprintf( timestamp, "%02d:%02d:%02d", hour, minute, second );
-        std::sprintf( datestamp, "%04d-%02d-%02d", year, month, day );
-        std::cout << "Lamp date: " << datestamp << ", time: " << timestamp << std::endl;
-      
+        this->parse_time_report(packet);
+        
       } else if (packet[7] == COMMAND_ADDRESS_REPORT) {
-        // mesh_id = packet[10]
+        this->parse_address_report(packet);
         
       } else if (packet[7] == COMMAND_ALARM_REPORT) {
+        this->parse_alarm_report(packet);
         
-      
       } else if (packet[7] == COMMAND_DEVICE_INFO_REPORT) {
-        if (packet[19] == 0) { // packet contains device info
-          
-        } else if (packet[19] == 2) { // packet contains device version
-          
-        }
-      
+        this->parse_device_info_report(packet);
+        
       } else if (packet[7] == COMMAND_GROUP_ID_REPORT) {
-      
-      } else if (packet[7] == COMMAND_SCENE_REPORT) {
+        this->parse_group_id_report(packet);
+        
+      } else if (packet[7] == COMMAND_SCENARIO_REPORT) {
+        this->parse_scenario_report(packet);
       
       }
     } 
