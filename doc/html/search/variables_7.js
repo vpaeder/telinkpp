@@ -1,5 +1,5 @@
 var searchData=
 [
-  ['shared_5fkey_107',['shared_key',['../classtelink_1_1_telink_mesh.html#a315a8e184337188ecf0eeec5f8cf3010',1,'telink::TelinkMesh']]],
-  ['state_108',['state',['../classtelink_1_1_telink_light.html#a3db33677ed9c102049f5d263d24ee3f2',1,'telink::TelinkLight']]]
+  ['r_162',['R',['../classtelink_1_1_telink_color.html#a77930a048dec418af3e2a45f03ac4ff1',1,'telink::TelinkColor']]],
+  ['reverse_5faddress_163',['reverse_address',['../classtelink_1_1_telink_mesh.html#a8cb50b8db584ec6d4d3d571a898fd55f',1,'telink::TelinkMesh']]]
 ];

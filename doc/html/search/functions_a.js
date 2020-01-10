@@ -1,15 +1,11 @@
 var searchData=
 [
-  ['send_5fpacket_81',['send_packet',['../classtelink_1_1_telink_mesh.html#ae2bf63aaba49820ee4faf0eaf80e2502',1,'telink::TelinkMesh']]],
-  ['set_5faddress_82',['set_address',['../classtelink_1_1_telink_mesh.html#a39b5e8f38d778865d7da5f5e7453dd3d',1,'telink::TelinkMesh']]],
-  ['set_5fbrightness_83',['set_brightness',['../classtelink_1_1_telink_light.html#ac8b4dbee4741bc2825f623a203ff6aca',1,'telink::TelinkLight']]],
-  ['set_5fcolor_84',['set_color',['../classtelink_1_1_telink_light.html#a1398bad30a1e132146ca4c40aa452255',1,'telink::TelinkLight']]],
-  ['set_5fmesh_5fid_85',['set_mesh_id',['../classtelink_1_1_telink_light.html#a8d653c8d96fe37d1e8125767d47fa406',1,'telink::TelinkLight::set_mesh_id()'],['../classtelink_1_1_telink_mesh.html#ab956a64dfa5d88da4d61030c8d4a9a04',1,'telink::TelinkMesh::set_mesh_id()']]],
-  ['set_5fmusic_5fmode_86',['set_music_mode',['../classtelink_1_1_telink_light.html#abb25b93000a2d095e65f9d21a18c5678',1,'telink::TelinkLight']]],
-  ['set_5fname_87',['set_name',['../classtelink_1_1_telink_mesh.html#aff4bbbcb8a36ad1874d50619ceee615a',1,'telink::TelinkMesh']]],
-  ['set_5fpassword_88',['set_password',['../classtelink_1_1_telink_mesh.html#aef96a35656b10e3eee26b8ad4c1cc96b',1,'telink::TelinkMesh']]],
-  ['set_5fstate_89',['set_state',['../classtelink_1_1_telink_light.html#aceeee6ee5247506d9c7eec1cd50471a3',1,'telink::TelinkLight']]],
-  ['set_5ftemperature_90',['set_temperature',['../classtelink_1_1_telink_light.html#a53ef9dfe11a9ae330b73ee4029ce673a',1,'telink::TelinkLight']]],
-  ['set_5ftime_91',['set_time',['../classtelink_1_1_telink_light.html#a7d5a51b302c023bf90b7723ece21749d',1,'telink::TelinkLight']]],
-  ['set_5fvendor_92',['set_vendor',['../classtelink_1_1_telink_mesh.html#abd350513eff729a725f696c199e44f0f',1,'telink::TelinkMesh']]]
+  ['query_5falarm_120',['query_alarm',['../classtelink_1_1_telink_light.html#ab1bbc227d2e99c4684bf1da2e5cbe5d5',1,'telink::TelinkLight']]],
+  ['query_5fdevice_5finfo_121',['query_device_info',['../classtelink_1_1_telink_light.html#ac4235b8d44135da902ea22395358311d',1,'telink::TelinkLight']]],
+  ['query_5fdevice_5fversion_122',['query_device_version',['../classtelink_1_1_telink_light.html#ae8076cddaf11493643a15d365b80358d',1,'telink::TelinkLight']]],
+  ['query_5fgroups_123',['query_groups',['../classtelink_1_1_telink_light.html#a3fca23a992a13daada2612a2856f2297',1,'telink::TelinkLight']]],
+  ['query_5fmesh_5fid_124',['query_mesh_id',['../classtelink_1_1_telink_light.html#a8c48180ba63a8b914d09499064b4e463',1,'telink::TelinkLight']]],
+  ['query_5fscenarios_125',['query_scenarios',['../classtelink_1_1_telink_light.html#ab85030f5ea7a638118d2fdba5878fa0a',1,'telink::TelinkLight']]],
+  ['query_5fstatus_126',['query_status',['../classtelink_1_1_telink_light.html#a73bea50db51810023449de5da0cad893',1,'telink::TelinkLight']]],
+  ['query_5ftime_127',['query_time',['../classtelink_1_1_telink_light.html#a838f435dd61c487fa23f18f10df26a9e',1,'telink::TelinkLight']]]
 ];

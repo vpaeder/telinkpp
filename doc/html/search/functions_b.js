@@ -1,5 +1,5 @@
 var searchData=
 [
-  ['telinklight_93',['TelinkLight',['../classtelink_1_1_telink_light.html#a58f194f199733fed2623ab51a4a1f759',1,'telink::TelinkLight']]],
-  ['telinkmesh_94',['TelinkMesh',['../classtelink_1_1_telink_mesh.html#a6205f9bac3e8f17526619d78132843e2',1,'telink::TelinkMesh::TelinkMesh(const std::string address)'],['../classtelink_1_1_telink_mesh.html#a5bc257129bf2d9ff1bc8a1b855a5e8d8',1,'telink::TelinkMesh::TelinkMesh(const std::string address, const std::string name, const std::string password)']]]
+  ['remove_5fcolor_128',['remove_color',['../classtelink_1_1_telink_scenario.html#a270c5e969145f332ea74eb7113fc0516',1,'telink::TelinkScenario']]],
+  ['replace_5fcolor_129',['replace_color',['../classtelink_1_1_telink_scenario.html#a5214a46ab4e5a353c9d81bd6a5691b04',1,'telink::TelinkScenario']]]
 ];
