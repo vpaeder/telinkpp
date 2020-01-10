@@ -28,25 +28,25 @@ int main(int argc, char **argv) {
   ble_light.set_temperature(4600); // set white light temperature
   ble_light.set_brightness(100); // set light brightness to maximum
 	
-	ble_light.load_mode(MODE_SEA, 8); // set light in Sea mode, with speed = 8
+	ble_light.load_scenario(SCENARIO_SEA, 8); // set light in Sea scenario, with speed = 8
 	std::this_thread::sleep_for(std::chrono::seconds(5));
 	
-  ble_light.set_music_mode(true); // set device to music mode
-  
-  // create custom mode
-  TelinkLightMode custom_mode;
-  // add 6 colors to mode
+  // create custom scenario
+  TelinkScenario custom_scenario;
+  // add 6 colors to scenario
   for (int i=0; i<6; i++) {
     TelinkColor colorn(255, i*40, 255-i*40, 100);
-    custom_mode.add_color(colorn);
+    custom_scenario.add_color(colorn);
   }
-  // set custom mode on device as custom mode 3
-  ble_light.edit_mode(MODE_CUSTOM_3, custom_mode);
-  // set light in new custom mode, with speed = 3
-	ble_light.load_mode(MODE_CUSTOM_3, 3);
-  // set alarm with custom mode to turn on at 12:30:00 every day except Sunday
+  // set custom scenario on device as custom scenario 3
+  ble_light.edit_scenario(SCENARIO_CUSTOM_3, custom_scenario);
+  // set light in new custom scenario, with speed = 3
+	ble_light.load_scenario(SCENARIO_CUSTOM_3, 3);
+  // set alarm with custom scenario to turn on at 12:30:00 every day except Sunday
   std::vector<bool> days = {false, true, true, true, true, true, true};
-  ble_light.set_alarm(1, days, 12, 30, 0, MODE_CUSTOM_3);
+  ble_light.set_alarm(1, days, 12, 30, 0, SCENARIO_CUSTOM_3);
+  
+  ble_light.set_music_mode(true); // set device in music mode
   
   /* initialize random seed: */
   std::srand(time(NULL));
