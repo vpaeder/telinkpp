@@ -20,7 +20,7 @@ namespace telink {
   static std::string uuid_command_char = "00010203-0405-0607-0809-0a0b0c0d1912";
   /** \brief UUID for Bluetooth GATT pairing characteristic */
   static std::string uuid_pair_char = "00010203-0405-0607-0809-0a0b0c0d1914";
-
+  
   /** \class TelinkMesh
    *  \brief Class handling connection with a Bluetooth LE device with Telink mesh protocol.
    */
@@ -137,11 +137,11 @@ namespace telink {
     void notification_callback(BluetoothGattCharacteristic & c, std::vector<unsigned char> & data);
   
   protected:
-     /** \property int mesh_id
-      *  \brief Device ID.
-      */
+    /** \property int mesh_id
+     *  \brief Device ID.
+     */
     int mesh_id = 0;
-  
+    
   public:
     /** \fn TelinkMesh(const std::string address)
      *  \brief Object instantiation.
@@ -203,6 +203,12 @@ namespace telink {
      *  \brief Disconnects from Bluetooth device.
      */
     void disconnect();
+    
+    /** \fn bool is_connected()
+     *  \brief Probes whether the connection with the device is established.
+     *  \returns true if connected, false otherwise.
+     */
+    bool is_connected();
   };
   
 }
