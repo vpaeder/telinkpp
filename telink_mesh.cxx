@@ -113,7 +113,9 @@ namespace telink {
     std::string data_string = from_vector(data);
     std::string decoded_string = this->decrypt_packet(data_string);
     
+    #ifdef DEBUG
     print_hex_string("Received data", decoded_string);
+    #endif
     
     // check that targetted vendor is correct
     if ((decoded_string[8] == (this->vendor & 0xff)) && (decoded_string[9] == (this->vendor >> 8)))
@@ -132,6 +134,11 @@ namespace telink {
   }
 
   void TelinkMesh::set_address(const std::string address) {
+    if (this->ble_mesh != nullptr) {
+      std::cerr << "Address change can only occur when disconnected." << std::endl;
+      return;
+    }
+    
     this->address = address;
     this->reverse_address = "";
     std::vector<std::string> mac;
@@ -142,11 +149,15 @@ namespace telink {
   }
 
   void TelinkMesh::set_name(const std::string name) {
+    if (this->ble_mesh != nullptr)
+      std::cerr << "Connection already established. Name change will apply only after reconnection." << std::endl;
     this->name = name;
     this->name.append(16-name.size(), 0);
   }
 
   void TelinkMesh::set_password(const std::string password) {
+    if (this->ble_mesh != nullptr)
+      std::cerr << "Connection already established. Password change will apply only after reconnection." << std::endl;
     this->password = password;
     this->password.append(16 - password.size(), 0);
   }
@@ -242,7 +253,7 @@ namespace telink {
 
   bool TelinkMesh::connect() {
     if (this->ble_mesh != nullptr){
-      std::cerr << "Error: mesh node is already connected" << std::endl;
+      std::cerr << "Error: mesh node with address " << this->address << " is already connected" << std::endl;
       return false;
     }
   
@@ -312,7 +323,20 @@ namespace telink {
     this->ble_mesh = nullptr;
   }
 
+  bool TelinkMesh::is_connected() {
+    if (this->ble_mesh == nullptr) return false;
+    return this->ble_mesh->get_connected();
+  }
+  
   void TelinkMesh::send_packet(int command, const std::string & data) {
+    if (!this->is_connected()) {
+      this->disconnect();
+      this->connect();
+      if (!this->is_connected()) {
+        std::cerr << "Device with address " << this->address << " is disconnected and reconnection failed." << std::endl;
+        return;
+      }
+    }
     std::string enc_packet = this->build_packet(command, data);
     this->command_char->write_value(to_vector(enc_packet));
   }
