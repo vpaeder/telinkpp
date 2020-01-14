@@ -44,4 +44,4 @@ For details on class methods and features, see documentation in doc folder.
 # Usage of example program
 ` $ sudo ./telink_test <device_MAC_address> <device_name> <device_password>`
 
-Device MAC address can be found by scanning for Bluetooth devices. Device name and password depend on brand and model. Factory defaults proposed by Telink are *telink_mesh1* and *123*.
+Device MAC address can be found by scanning for Bluetooth devices. Device name and password depend on brand and model. Factory defaults proposed by Telink are *telink_mesh1* and *123*, but will have likely been changed by the manufacturer of your device to something else.
