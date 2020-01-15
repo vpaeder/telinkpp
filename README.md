@@ -26,7 +26,7 @@ Device replies are treated minimally to demonstrate what data packets contain. Q
 - CMake (for compilation, optional) - https://cmake.org
 - Doxygen (for docs, optional) - http://doxygen.nl
 
-Note that you need a system on which TinyB works. In practice this means some blend of Linux with the BlueZ stack. I tested it on Raspbian.
+Note that you need a system on which TinyB works. In practice this means some blend of Linux with the BlueZ stack. I tested it on Raspbian Buster with BlueZ 5.50.
 
 # Compiling
 This can be done easily with CMake using the provided CMakeLists.txt file.
@@ -45,3 +45,31 @@ For details on class methods and features, see documentation in doc folder.
 ` $ sudo ./telink_test <device_MAC_address> <device_name> <device_password>`
 
 Device MAC address can be found by scanning for Bluetooth devices. Device name and password depend on brand and model. Factory defaults proposed by Telink are *telink_mesh1* and *123*, but will have likely been changed by the manufacturer of your device to something else.
+
+##### Finding the MAC address
+On the command line, this can be done with:
+` $ sudo ./bluetoothctl`
+It opens the bluetooth control utility from BlueZ in interactive mode. Type `scan on` and wait that the device appears in the discovery report.
+
+##### Finding device name and password
+This can be a little longer. For the device I wanted to control, I had to use Android Studio with the smalidea plugin to debug the Briloner Control app. This involved the following steps:
+1. Download and install Android Studio from https://developer.android.com/studio
+2. Download and install the smalidea plugin - https://github.com/JesusFreke/smali
+3. Install VirtualBox - https://www.virtualbox.org
+4. Install Android-x86 on VirtualBox - https://www.android-x86.org
+5. In the virtual machine configuration, under *Network*, configure a *Host-only adapter*
+6. In the virtual machine configuration, under *Ports*, *USB*, add the Bluetooth controller
+7. Enable Developer mode on Android
+8. Use `adb connect <virtual_machine_IP_address>` to link computer and virtual machine together
+9. Set root mode with `adb root`
+10. Download app package in APK format
+11. Decompile the app with JADX - this can be done online on http://www.javadecompilers.com
+12. Install the app on the virtual machine with `adb install your_app_file.apk`
+13. In Android developer settings, select app in *Select debug app* and enable *Wait for debugger*
+14. Create a project in Android Studio with the decompiled app - tutorial here: https://malacupa.com/2018/11/11/debug-decompiled-smali-code-in-android-studio-3.2.html
+15. Find the appropriate *login* method within the code, and place a breakpoint there.
+16. Start app on Android.
+17. Start debugger in Android Studio and attach with the right process (for me: cn.telink.blelight )
+18. When the breakpoint triggers, check variables for device name and password
+
+One can do the same with a real phone, in which case steps 3-6 are not necessary.
