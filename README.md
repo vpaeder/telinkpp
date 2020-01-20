@@ -84,9 +84,6 @@ For TelinkLight, Python callbacks can be set by creating a derived class. The fo
 from pytelink import TelinkLight
 
 class MyLight(TelinkLight):
-    def __init__(self, address, name, password):
-        TelinkLight.__init__(self, address, name, password)
-    
     def parse_online_status_report(self, packet):
         pass # do something here with packet content
 
