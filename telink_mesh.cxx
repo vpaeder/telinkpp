@@ -8,6 +8,7 @@
 #include <iostream>
 #include <iomanip>
 #include <sstream>
+#include <exception>
 
 #include <openssl/evp.h>
 #include <openssl/err.h>
@@ -20,8 +21,6 @@
 
 namespace telink {
   
-  #define ABORT() (fprintf(stderr, "%s\nAborting in %s at %s:%d\n", ERR_error_string(ERR_get_error(), NULL), __PRETTY_FUNCTION__, __FILE__, __LINE__), abort(), 0)
-
   /** \fn static std::string encrypt(std::string key, std::string data)
    *  \brief Encrypts a n x 16-byte data string with a 16-byte key, using AES encryption.
    *  \param key : 16-byte encryption key.
@@ -37,34 +36,11 @@ namespace telink {
     EVP_CIPHER_CTX_set_padding(ctx, false);
     unsigned char buffer[1024], *pointer = buffer;
     int outlen;
-    EVP_EncryptUpdate (ctx, pointer, &outlen, (const unsigned char*)data.c_str(), data.length()) or ABORT();
+    if (!EVP_EncryptUpdate(ctx, pointer, &outlen, (const unsigned char*)data.c_str(), data.length()))
+      throw std::runtime_error("AES encryption failed in encryption stage.");
     pointer += outlen;
-    EVP_EncryptFinal_ex(ctx, pointer, &outlen) or ABORT();
-    pointer += outlen;
-    std::string result = std::string((char*)buffer, pointer-buffer);
-    std::reverse(result.begin(), result.end());
-    EVP_CIPHER_CTX_free(ctx);
-    return result;
-  }
-
-   /** \fn static std::string decrypt(std::string key, std::string data)
-    *  \brief Decrypts a n x 16-byte data string with a 16-byte key, using AES encryption.
-    *  \param key : 16-byte encryption key.
-    *  \param data : n x 16-byte data string
-    *  \returns the decrypted data string.
-    */
-  static std::string decrypt(std::string key, std::string data) {
-    std::reverse(key.begin(), key.end());
-    std::reverse(data.begin(), data.end());
-  
-    EVP_CIPHER_CTX *ctx = EVP_CIPHER_CTX_new();
-    EVP_DecryptInit_ex (ctx, EVP_aes_128_ecb(), NULL, (unsigned char*)key.c_str(), NULL);
-    EVP_CIPHER_CTX_set_padding(ctx, false);
-    unsigned char buffer[1024], *pointer = buffer;
-    int outlen;
-    EVP_DecryptUpdate (ctx, pointer, &outlen, (unsigned char*)data.c_str(), data.length()) or ABORT();
-    pointer += outlen;
-    EVP_DecryptFinal_ex(ctx, pointer, &outlen) or ABORT();
+    if (!EVP_EncryptFinal_ex(ctx, pointer, &outlen))
+      throw std::runtime_error("AES encryption failed in final stage.");
     pointer += outlen;
     std::string result = std::string((char*)buffer, pointer-buffer);
     std::reverse(result.begin(), result.end());
@@ -132,6 +108,10 @@ namespace telink {
     this->set_name(name);
     this->set_password(password);
   }
+  
+  TelinkMesh::~TelinkMesh() {
+    this->disconnect();
+  }
 
   void TelinkMesh::set_address(const std::string address) {
     if (this->ble_mesh != nullptr) {
@@ -166,10 +146,6 @@ namespace telink {
     this->vendor = vendor & 0xffff;
   }
 
-  void TelinkMesh::set_mesh_id(int mesh_id) {
-    this->mesh_id = mesh_id & 0xffff;
-  }
-
   std::string TelinkMesh::combine_name_and_password() const {
     std::string data;
     for (int i=0; i<16; i++)
@@ -179,29 +155,54 @@ namespace telink {
 
   void TelinkMesh::generate_shared_key(const std::string & data1, const std::string & data2) {
     std::string key = this->combine_name_and_password();
-    this->shared_key = encrypt(key, data1.substr(0,8) + data2.substr(0,8));
+    try {
+      this->shared_key = encrypt(key, data1.substr(0,8) + data2.substr(0,8));
+    } catch (std::runtime_error & e) {
+      std::cerr << "Shared key generation failed. Error: " << e.what() << std::endl;
+    }
   }
 
   std::string TelinkMesh::key_encrypt(std::string & key) const {
     std::string data = combine_name_and_password();
-    return encrypt(key, data);
+    std::string result;
+    try {
+      result = encrypt(key, data);
+    } catch (std::runtime_error & e) {
+      std::cerr << "Public key generation failed. Error: " << e.what() << std::endl;
+    }
+    return result;
   }
 
   std::string TelinkMesh::encrypt_packet(std::string & packet) const {
     std::string auth_nonce = this->reverse_address.substr(0,4) + '\1' + packet.substr(0,3) + '\x0f';
     auth_nonce.append(7,0);
-    std::string authenticator = encrypt(this->shared_key, auth_nonce);
+    std::string authenticator;
+    try {
+      authenticator = encrypt(this->shared_key, auth_nonce);
+    } catch (std::runtime_error & e) {
+      std::cerr << "Packet authenticator generation failed. Error: " << e.what() << std::endl;
+    }
     for (int i=0; i<15; i++)
       authenticator[i] ^= packet[i+5];
-  
-    std::string mac = encrypt(this->shared_key, authenticator);
+    
+    std::string mac;
+    try {
+      mac = encrypt(this->shared_key, authenticator);
+    } catch (std::runtime_error & e) {
+      std::cerr << "MAC encryption for packet failed. Error: " << e.what() << std::endl;
+    }
   
     for (int i=0; i<2; i++)
       packet[i+3] = mac[i];
   
     std::string iv = '\0' + this->reverse_address.substr(0,4) + '\1' + packet.substr(0,3);
     iv.append(7,0);
-    std::string buffer = encrypt(this->shared_key, iv);
+    std::string buffer;
+    try {
+      buffer = encrypt(this->shared_key, iv);
+    } catch (std::runtime_error & e) {
+      std::cerr << "Packet encryption failed. Error: " << e.what() << std::endl;
+    }
   
     for (int i=0; i<15; i++)
       packet[i+5] ^= buffer[i];
@@ -212,7 +213,14 @@ namespace telink {
   std::string TelinkMesh::decrypt_packet(std::string & packet) const {
     std::string iv = '\0' + this->reverse_address.substr(0,3) + packet.substr(0,5);
     iv.append(7,0);
-    std::string result = encrypt(this->shared_key, iv);
+    
+    std::string result;
+    
+    try {
+      result = encrypt(this->shared_key, iv);
+    } catch (std::runtime_error & e) {
+      std::cerr << "Packet decryption failed. Error: " << e.what() << std::endl;
+    }
     for (int i=0; i<packet.size()-7; i++)
       packet[i+7] ^= result[i];
   
@@ -341,4 +349,111 @@ namespace telink {
     this->command_char->write_value(to_vector(enc_packet));
   }
   
+  void TelinkMesh::query_mesh_id() {
+    this->send_packet(COMMAND_ADDRESS_EDIT, {schar(0xff), schar(0xff)});
+  }
+  
+  void TelinkMesh::query_groups() {
+    this->send_packet(COMMAND_GROUP_ID_QUERY, {0x0A, 0x01});
+  }
+  
+  void TelinkMesh::query_time() {
+    this->send_packet(COMMAND_TIME_QUERY, {0x10});
+  }
+  
+  void TelinkMesh::query_device_info() {
+    this->send_packet(COMMAND_DEVICE_INFO_QUERY, {0x10});
+  }
+  
+  void TelinkMesh::query_device_version() {
+    this->send_packet(COMMAND_DEVICE_INFO_QUERY, {0x10, 0x02});
+  }
+  
+  void TelinkMesh::set_time() {
+    time_t now = std::time( 0 );
+    tm *ltm = std::localtime( &now );
+    int year = 1900 + ltm->tm_year;
+    this->send_packet(COMMAND_TIME_SET, {schar(year & 0xff), schar(year >> 8), schar(ltm->tm_mon + 1), schar(ltm->tm_mday), schar(ltm->tm_hour), schar(ltm->tm_min), schar(ltm->tm_sec)});
+  }
+  
+  void TelinkMesh::set_mesh_id(int mesh_id) {
+    this->mesh_id = mesh_id & 0xffff;
+    this->send_packet(COMMAND_ADDRESS_EDIT, {schar(mesh_id & 0xff), schar((mesh_id >> 8) & 0xff)});
+  }
+  
+  void TelinkMesh::add_group(unsigned char group_id) {
+    this->send_packet(COMMAND_GROUP_EDIT, {0x01, schar(group_id), schar(0x80)});
+  }
+  
+  void TelinkMesh::delete_group(unsigned char group_id) {
+    this->send_packet(COMMAND_GROUP_EDIT, {0x00, schar(group_id), schar(0x80)});
+  }
+  
+  bool TelinkMesh::check_packet_validity(const std::string & packet) {
+    // NOTE: from specs, received_id == 0xffff targets all connected devices,
+    //  but presently received_id will never exceed 0xff.
+    // received_id == 0 targets the connected device only
+    unsigned int received_id;
+    if (static_cast<unsigned char>(packet[7]) == COMMAND_ONLINE_STATUS_REPORT) {
+      received_id = packet[10];
+      if (this->mesh_id == 0)
+        this->mesh_id = received_id;
+    } else {
+      received_id = packet[3];
+    }
+  
+    return (this->mesh_id == received_id || received_id == 0);
+  }
+  
+  void TelinkMesh::parse_time_report(const std::string & packet) {
+    unsigned int year = packet[10] + (packet[11] << 8);
+    unsigned char month = packet[12];
+    unsigned char day = packet[13];
+    unsigned char hour = packet[14];
+    unsigned char minute = packet[15];
+    unsigned char second = packet[16];
+    char timestamp[9], datestamp[9];
+    std::sprintf( timestamp, "%02d:%02d:%02d", hour, minute, second );
+    std::sprintf( datestamp, "%04d-%02d-%02d", year, month, day );
+    std::cout << "Lamp date: " << datestamp << ", time: " << timestamp << std::endl;
+  }
+  
+  void TelinkMesh::parse_address_report(const std::string & packet) {
+    unsigned char mesh_id = packet[10];
+    std::vector<unsigned char> mac_address(6);
+    for (int i=0; i<6; i++)
+      mac_address[i] = packet[12+i];
+  }
+  
+  void TelinkMesh::parse_device_info_report(const std::string & packet) {
+    // unfortunately, no code or datasheet seems to be available to explain
+    // the content of these packets, except for the 2 conditions below
+    if (packet[19] == 0) { // packet contains device info
+    } else if (packet[19] == 2) { // packet contains device version
+    }
+  }
+  
+  void TelinkMesh::parse_group_id_report(const std::string & packet) {
+    std::vector<unsigned char> groups(10);
+    for (int i=0; i<10; i++)
+      groups[i] = packet[10+i];
+  }
+  
+  void TelinkMesh::parse_command(const std::string & packet) {
+    if (this->check_packet_validity(packet)) {
+      if (static_cast<unsigned char>(packet[7]) == COMMAND_TIME_REPORT) {
+        this->parse_time_report(packet);
+        
+      } else if (static_cast<unsigned char>(packet[7]) == COMMAND_ADDRESS_REPORT) {
+        this->parse_address_report(packet);
+        
+      } else if (static_cast<unsigned char>(packet[7]) == COMMAND_DEVICE_INFO_REPORT) {
+        this->parse_device_info_report(packet);
+        
+      } else if (static_cast<unsigned char>(packet[7]) == COMMAND_GROUP_ID_REPORT) {
+        this->parse_group_id_report(packet);
+        
+      }
+    }
+  }
 }
