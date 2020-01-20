@@ -1,5 +1,5 @@
 # Summary
-This project provides C++ classes to handle a Bluetooth LE lighting with Telink mesh protocol. Telink chips can be found for instance in cheap connected light bulbs from Lidl (Livarno LUX brand), from Briloner Leuchten GmbH, or C by GE connected lighting.
+This project provides C++ classes to handle a Bluetooth LE lighting with Telink mesh protocol. A Python wrapper is also provided. Telink chips can be found for instance in cheap connected light bulbs from Lidl (Livarno LUX brand), from Briloner Leuchten GmbH, or C by GE connected lighting.
 
 The command set is derived from Telink demo apps together with an analysis of the Briloner Control phone app. Since the app makes use of a subset of the available features and Telink's documentation on the subject is between absconse and inexistant, it is probable that some features will never be implemented.
 
@@ -73,3 +73,20 @@ This can be a little longer. For the device I wanted to control, I had to use An
 18. When the breakpoint triggers, check variables for device name and password
 
 One can do the same with a real phone, in which case steps 3-6 are not necessary.
+
+# Usage of Python wrapper
+The Python wrapper gives access to public methods of all C++ classes. For TelinkLight, Python callbacks can be set by creating a derived class. The following example shows how to overload `parse_online_status_report` in Python:
+```
+from pytelink import TelinkLight
+
+class MyLight(TelinkLight):
+    def __init__(self, address, name, password):
+        TelinkLight.__init__(self, address, name, password)
+    
+    def parse_online_status_report(self, packet):
+        pass # do something here with packet content
+
+ml = MyLight("AA:BB:CC:DD:EE:FF", "DeviceName", "Password")
+ml.connect()
+ml.set_state(True) # turn light on
+```
