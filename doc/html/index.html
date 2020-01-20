@@ -5,7 +5,7 @@
 <meta http-equiv="X-UA-Compatible" content="IE=9"/>
 <meta name="generator" content="Doxygen 1.8.16"/>
 <meta name="viewport" content="width=device-width, initial-scale=1"/>
-<title>Telink Mesh Light C++ interface: Main Page</title>
+<title>Telink Mesh Light C++ interface: Summary</title>
 <link href="tabs.css" rel="stylesheet" type="text/css"/>
 <script type="text/javascript" src="jquery.js"></script>
 <script type="text/javascript" src="dynsections.js"></script>
@@ -94,23 +94,86 @@ $(document).ready(function(){initNavTree('index.html','');});
 </iframe>
 </div>
 
-<div class="header">
+<div class="PageDoc"><div class="header">
   <div class="headertitle">
-<div class="title">Telink Mesh Light C++ interface Documentation</div>  </div>
+<div class="title">Summary </div>  </div>
 </div><!--header-->
 <div class="contents">
-<ul><li><a href="index.html"><span>Main&#160;Page</span></a>
-</li><li><a href="pages.html"><span>Related&#160;Pages</span></a>
-</li><li><a href="annotated.html"><span>Classes</span></a>
-<ul><li><a href="annotated.html"><span>Class&#160;List</span></a>
-</li><li><a href="classes.html"><span>Class&#160;Index</span></a>
-</li><li><a href="hierarchy.html"><span>Class&#160;Hierarchy</span></a>
-</li><li><a href="functions.html"><span>Class&#160;Members</span></a>
-</li></ul>
-</li><li><a href="files.html"><span>Files</span></a>
-<ul><li><a href="files.html"><span>File&#160;List</span></a>
-</li></ul>
-</li></ul>
+<div class="textblock"><p>This project provides C++ classes to handle a Bluetooth LE lighting with Telink mesh protocol. A Python wrapper is also provided. Telink chips can be found for instance in cheap connected light bulbs from Lidl (Livarno LUX brand), from Briloner Leuchten GmbH, or C by GE connected lighting.</p>
+<p>The command set is derived from Telink demo apps together with an analysis of the Briloner Control phone app. Since the app makes use of a subset of the available features and Telink's documentation on the subject is between absconse and inexistant, it is probable that some features will never be implemented.</p>
+<p>Parts of the key exchange and packet encryption/decryption routines are inspired from <a href="https://github.com/google/python-dimond">https://github.com/google/python-dimond</a> .</p>
+<h4>Implemented features</h4>
+<ul>
+<li>power on/off</li>
+<li>change brightness</li>
+<li>change color / temperature</li>
+<li>set alarms</li>
+<li>edit custom scenarios</li>
+<li>select scenarios</li>
+<li>device groups (use mesh ID 0x8000 + group ID to communicate with defined groups)</li>
+</ul>
+<h4>Not implemented</h4>
+<ul>
+<li>device reset</li>
+<li>OTA operations</li>
+</ul>
+<p>Device replies are treated minimally to demonstrate what data packets contain. Queries are treated asynchronously.</p>
+<h1>Requirements</h1>
+<ul>
+<li>Intel TinyB - <a href="https://github.com/intel-iot-devkit/tinyb">https://github.com/intel-iot-devkit/tinyb</a></li>
+<li>OpenSSL - <a href="https://www.openssl.org">https://www.openssl.org</a></li>
+<li>CMake (for compilation, optional) - <a href="https://cmake.org">https://cmake.org</a></li>
+<li>Python 2.x or 3.x (for Python wrapper, optional) - <a href="https://python.org">https://python.org</a></li>
+<li>Boost Python (for Python wrapper, optional) - <a href="https://boost.org">https://boost.org</a></li>
+<li>Doxygen (for docs, optional) - <a href="http://doxygen.nl">http://doxygen.nl</a></li>
+</ul>
+<p>Note that you need a system on which TinyB works. In practice this means some blend of Linux with the BlueZ stack. I tested it on Raspbian Buster with BlueZ 5.50.</p>
+<h1>Compiling</h1>
+<p>This can be done easily with CMake using the provided CMakeLists.txt file. On command line, in source folder, type: </p><div class="fragment"><div class="line">$ mkdir build &amp;&amp; cd build</div>
+<div class="line">$ cmake ..</div>
+<div class="line">$ make</div>
+</div><!-- fragment --><h1>Usage of C++ classes</h1>
+<p>At the moment I didn't write a compilation script to produce a library. Therefore one must take care of including the header and the cxx file in one's own source tree. For details on class methods and features, see documentation in doc folder.</p>
+<h1>Usage of example program</h1>
+<p><code>$ sudo ./telink_test &lt;device_MAC_address&gt; &lt;device_name&gt; &lt;device_password&gt;</code></p>
+<p>Device MAC address can be found by scanning for Bluetooth devices. Device name and password depend on brand and model. Factory defaults proposed by Telink are <em>telink_mesh1</em> and <em>123</em>, but will have likely been changed by the manufacturer of your device to something else.</p>
+<h5>Finding the MAC address</h5>
+<p>On the command line, this can be done with: <code>$ sudo ./bluetoothctl</code> It opens the bluetooth control utility from BlueZ in interactive mode. Type <code>scan on</code> and wait that the device appears in the discovery report.</p>
+<h5>Finding device name and password</h5>
+<p>This can be a little longer. For the device I wanted to control, I had to use Android Studio with the smalidea plugin to debug the Briloner Control app. This involved the following steps:</p><ol type="1">
+<li>Download and install Android Studio from <a href="https://developer.android.com/studio">https://developer.android.com/studio</a></li>
+<li>Download and install the smalidea plugin - <a href="https://github.com/JesusFreke/smali">https://github.com/JesusFreke/smali</a></li>
+<li>Install VirtualBox - <a href="https://www.virtualbox.org">https://www.virtualbox.org</a></li>
+<li>Install Android-x86 on VirtualBox - <a href="https://www.android-x86.org">https://www.android-x86.org</a></li>
+<li>In the virtual machine configuration, under <em>Network</em>, configure a <em>Host-only adapter</em></li>
+<li>In the virtual machine configuration, under <em>Ports</em>, <em>USB</em>, add the Bluetooth controller</li>
+<li>Enable Developer mode on Android</li>
+<li>Use <code>adb connect &lt;virtual_machine_IP_address&gt;</code> to link computer and virtual machine together</li>
+<li>Set root mode with <code>adb root</code></li>
+<li>Download app package in APK format</li>
+<li>Decompile the app with JADX - this can be done online on <a href="http://www.javadecompilers.com">http://www.javadecompilers.com</a></li>
+<li>Install the app on the virtual machine with <code>adb install your_app_file.apk</code></li>
+<li>In Android developer settings, select app in <em>Select debug app</em> and enable <em>Wait for debugger</em></li>
+<li>Create a project in Android Studio with the decompiled app - tutorial here: <a href="https://malacupa.com/2018/11/11/debug-decompiled-smali-code-in-android-studio-3.2.html">https://malacupa.com/2018/11/11/debug-decompiled-smali-code-in-android-studio-3.2.html</a></li>
+<li>Find the appropriate <em>login</em> method within the code, and place a breakpoint there.</li>
+<li>Start app on Android.</li>
+<li>Start debugger in Android Studio and attach with the right process (for me: cn.telink.blelight )</li>
+<li>When the breakpoint triggers, check variables for device name and password</li>
+</ol>
+<p>One can do the same with a real phone, in which case steps 3-6 are not necessary.</p>
+<h1>Usage of Python wrapper</h1>
+<p>The Python wrapper gives access to public methods of all C++ classes. To build it, invoke cmake with option <code>-DBUILD_PYTHON_WRAPPER=1</code>. It will build by default with Python 2 (tested to work on Raspbian Buster). To build with Python 3, add cmake option <code>-DBUILD_FOR_PYTHON_3=1</code>.</p>
+<p>For TelinkLight, Python callbacks can be set by creating a derived class. The following example shows how to overload <code>parse_online_status_report</code> in Python: </p><div class="fragment"><div class="line">from pytelink import TelinkLight</div>
+<div class="line"> </div>
+<div class="line">class MyLight(TelinkLight):</div>
+<div class="line">    def parse_online_status_report(self, packet):</div>
+<div class="line">        pass # do something here with packet content</div>
+<div class="line"> </div>
+<div class="line">ml = MyLight(&quot;AA:BB:CC:DD:EE:FF&quot;, &quot;DeviceName&quot;, &quot;Password&quot;)</div>
+<div class="line">ml.connect()</div>
+<div class="line">ml.set_state(True) # turn light on</div>
+</div><!-- fragment --><p> In this example, <code>parse_online_status_report</code> is triggered after <code>connect()</code> and after <code>set_state(...)</code>. Similar overloads can be written for every callback. See documentation in <a class="el" href="telink__python_8h.html">telink_python.h</a> for details. </p>
+</div></div><!-- PageDoc -->
 </div><!-- contents -->
 </div><!-- doc-content -->
 <!-- start footer part -->
