@@ -17,13 +17,13 @@ IF(Boost_FOUND)
   add_library(telink_wrapper SHARED telink_python.cxx)
   target_include_directories(telink_wrapper PUBLIC ${Boost_INCLUDE_DIRS} ${PyIncDirs})
   target_link_directories(telink_wrapper PUBLIC ${Boost_LIBRARY_DIRS} ${PyLibDirs})
-  target_link_libraries(telink_wrapper telink_light_o ${Boost_LIBRARIES} ${PyLibs} ${TINYB_LIBRARIES} ${OPENSSL_CRYPTO_LIBRARIES})
+  target_link_libraries(telink_wrapper telinkpp ${Boost_LIBRARIES} ${PyLibs} ${TINYB_LIBRARIES} ${OPENSSL_CRYPTO_LIBRARIES})
   set_target_properties(telink_wrapper PROPERTIES PREFIX "")
   set_target_properties(telink_wrapper PROPERTIES SUFFIX ".so")
   
   configure_file("__init__.py" "__init__.py" COPYONLY)
   
-	install( FILES ${CMAKE_CURRENT_BINARY_DIR}/telink_wrapper.so DESTINATION ${PyInstallDir}/pytelink )
-	install( FILES ${CMAKE_CURRENT_BINARY_DIR}/__init__.py DESTINATION ${PyInstallDir}/pytelink )
+  install( FILES ${CMAKE_CURRENT_BINARY_DIR}/telink_wrapper.so DESTINATION ${PyInstallDir}/pytelink )
+  install( FILES ${CMAKE_CURRENT_BINARY_DIR}/__init__.py DESTINATION ${PyInstallDir}/pytelink )
   
 ENDIF()
