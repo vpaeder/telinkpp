@@ -2,6 +2,8 @@ cmake_minimum_required(VERSION 3.0)
 
 project(telink_light_cpp)
 
+option(BUILD_PYTHON_WRAPPER "Build Python wrapper" ON)
+
 FIND_PACKAGE(OpenSSL REQUIRED) # for AES encryption/decryption
 
 FIND_PACKAGE(Doxygen)
@@ -10,15 +12,28 @@ IF (DOXYGEN_FOUND)
 ENDIF()
 
 INCLUDE(GNUInstallDirs)
+set(CMAKE_CXX_STANDARD 11)
+set(CMAKE_CXX_STANDARD_REQUIRED ON)
 
-set (CMAKE_CXX_FLAGS ${CMAKE_CXX_FLAGS} -std=c++11)
-set (CMAKE_EXE_LINKER_FLAGS ${CMAKE_EXE_LINKER_FLAGS} -L/usr/local/lib)
+find_library(TINYB_LIBRARIES NAMES "tinyb" REQUIRED)
+find_path(TINYB_INCLUDE_DIRS NAMES "tinyb.hpp" PATHS "/usr/include /usr/local/include /opt/local/include")
 
-add_executable(telink_test telink_test.cxx telink_mesh.cxx telink_light.cxx)
+set (CMAKE_CXX_FLAGS_DEBUG "${CMAKE_CXX_FLAGS} -g -DDEBUG")
+set (CMAKE_CXX_FLAGS_RELEASE "${CMAKE_CXX_FLAGS} -O3")
+set (CMAKE_EXE_LINKER_FLAGS "${CMAKE_EXE_LINKER_FLAGS} -L/usr/local/lib")
 
-include_directories(/usr/local/include ${OPENSSL_INCLUDE_DIR})
-target_link_libraries(telink_test tinyb ${OPENSSL_CRYPTO_LIBRARIES})
-link_libraries(tinyb)
+add_library ( telink_light_o STATIC telink_mesh.cxx telink_light.cxx )
+target_include_directories( telink_light_o PUBLIC ${TINYB_INCLUDE_DIRS} ${OPENSSL_INCLUDE_DIR})
+target_link_libraries(telink_light_o ${TINYB_LIBRARIES} ${OPENSSL_CRYPTO_LIBRARIES})
+
+add_executable(telink_test telink_test.cxx)
+
+target_include_directories(telink_test PUBLIC ${TINYB_INCLUDE_DIRS} ${OPENSSL_INCLUDE_DIR})
+target_link_libraries(telink_test telink_light_o ${TINYB_LIBRARIES} ${OPENSSL_CRYPTO_LIBRARIES})
+
+IF (BUILD_PYTHON_WRAPPER)
+  add_subdirectory(pytelink)
+ENDIF()
 
 # Documentation
 IF (DOXYGEN_FOUND AND BUILD_DOC)
