@@ -128,13 +128,15 @@ $(document).ready(function(){initNavTree('index.html','');});
 <li>Doxygen (for docs, optional) - <a href="http://doxygen.nl">http://doxygen.nl</a></li>
 </ul>
 <p>Note that you need a system on which TinyB works. In practice this means some blend of Linux with the BlueZ stack. I tested it on Raspbian Buster with BlueZ 5.50.</p>
-<h1>Compiling</h1>
+<h1>Compiling and installing</h1>
 <p>This can be done easily with CMake using the provided CMakeLists.txt file. On command line, in source folder, type: </p><div class="fragment"><div class="line">$ mkdir build &amp;&amp; cd build</div>
 <div class="line">$ cmake ..</div>
 <div class="line">$ make</div>
+<div class="line">$ sudo make install</div>
 </div><!-- fragment --><p> To build documentation (doxygen required), add <code>-DBUILD_DOC=1</code> option to cmake. To build the Python wrapper, add <code>-DBUILD_PYTHON_WRAPPER=1</code>. Add <code>-DBUILD_FOR_PYTHON_3=1</code> to build for Python 3 instead of 2.</p>
 <h1>Usage of C++ classes</h1>
-<p>At the moment I didn't write a compilation script to produce a library. Therefore one must take care of including the header and the cxx file in one's own source tree. For details on class methods and features, see documentation in doc folder.</p>
+<p>For details on class methods and features, see documentation in doc folder.</p>
+<p>When building a project that requires <code>telinkpp</code>, remember to add it to the list of dependencies.</p>
 <h1>Usage of example program</h1>
 <p><code>$ sudo ./telink_test &lt;device_MAC_address&gt; &lt;device_name&gt; &lt;device_password&gt;</code></p>
 <p>Device MAC address can be found by scanning for Bluetooth devices. Device name and password depend on brand and model. Factory defaults proposed by Telink are <em>telink_mesh1</em> and <em>123</em>, but will have likely been changed by the manufacturer of your device to something else.</p>
