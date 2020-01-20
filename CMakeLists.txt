@@ -2,13 +2,13 @@ cmake_minimum_required(VERSION 3.0)
 
 project(telink_light_cpp)
 
-option(BUILD_PYTHON_WRAPPER "Build Python wrapper" ON)
+option(BUILD_PYTHON_WRAPPER "Build Python wrapper" OFF)
 
 FIND_PACKAGE(OpenSSL REQUIRED) # for AES encryption/decryption
 
 FIND_PACKAGE(Doxygen)
 IF (DOXYGEN_FOUND)
-	option(BUILD_DOC "Build documentation" ON)
+	option(BUILD_DOC "Build documentation" OFF)
 ENDIF()
 
 INCLUDE(GNUInstallDirs)
