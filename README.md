@@ -30,13 +30,14 @@ Device replies are treated minimally to demonstrate what data packets contain. Q
 
 Note that you need a system on which TinyB works. In practice this means some blend of Linux with the BlueZ stack. I tested it on Raspbian Buster with BlueZ 5.50.
 
-# Compiling
+# Compiling and installing
 This can be done easily with CMake using the provided CMakeLists.txt file.
 On command line, in source folder, type:
 ```
  $ mkdir build && cd build
  $ cmake ..
  $ make
+ $ sudo make install
 ```
 To build documentation (doxygen required), add `-DBUILD_DOC=1` option to cmake.
 To build the Python wrapper, add `-DBUILD_PYTHON_WRAPPER=1`. Add `-DBUILD_FOR_PYTHON_3=1` to build for Python 3 instead of 2.
