@@ -47,10 +47,61 @@ namespace telink {
     
   };
   
+ /** \class TelinkMeshPythonCallback
+  *  \brief Python callback class for TelinkMesh.
+  */
+ class TelinkMeshPythonCallback : public TelinkMesh {
+ private:
+   /** \property PyObject * self
+    *  \brief Pointer to a Python TelinkLight class instance.
+    */
+   PyObject * self;
+ 
+ public:
+   /** \fn TelinkMeshPythonCallback(PyObject *self_, const std::string address, const std::string name, const std::string password)
+    *  \brief Object instantiation.
+    *  \param self_ : pointer to Python TelinkMesh class instance.
+    *  \param address : device MAC address.
+    *  \param name : device name.
+    *  \param password : device password.
+    */
+   TelinkMeshPythonCallback(PyObject *self_, const std::string address, const std::string name, const std::string password) : self(self_), TelinkMesh(address, name, password) {
+     if (!PyEval_ThreadsInitialized())
+       PyEval_InitThreads();
+   }
+   
+   ~TelinkMeshPythonCallback() {}
+   
+   /** \fn virtual void parse_time_report(const std::string & packet)
+    *  \brief Parses a command packet from a time report.
+    *  \param packet : decrypted packet to be parsed.
+    */
+   virtual void parse_time_report(const std::string & packet);
+   
+   /** \fn virtual void parse_address_report(const std::string & packet)
+    *  \brief Parses a command packet from an address report.
+    *  \param packet : decrypted packet to be parsed.
+    */
+   virtual void parse_address_report(const std::string & packet);
+   
+   /** \fn virtual void parse_device_info_report(const std::string & packet)
+    *  \brief Parses a command packet from a device info report.
+    *  \param packet : decrypted packet to be parsed.
+    */
+   virtual void parse_device_info_report(const std::string & packet);
+   
+   /** \fn virtual void parse_group_id_report(const std::string & packet)
+    *  \brief Parses a command packet from a group ID report.
+    *  \param packet : decrypted packet to be parsed.
+    */
+   virtual void parse_group_id_report(const std::string & packet);
+   
+ };
+
   /** \class TelinkLightPythonCallback
    *  \brief Python callback class for TelinkLight.
    */
-  class TelinkLightPythonCallback : public TelinkLightPython {
+  class TelinkLightPythonCallback : public TelinkLightPython, TelinkMeshPythonCallback {
   private:
     /** \property PyObject * self
      *  \brief Pointer to a Python TelinkLight class instance.
@@ -65,10 +116,7 @@ namespace telink {
      *  \param name : device name.
      *  \param password : device password.
      */
-    TelinkLightPythonCallback(PyObject *self_, const std::string address, const std::string name, const std::string password) : self(self_), TelinkLightPython(address, name, password) {
-      if (!PyEval_ThreadsInitialized())
-        PyEval_InitThreads();
-    }
+    TelinkLightPythonCallback(PyObject *self_, const std::string address, const std::string name, const std::string password) : self(self_), TelinkLightPython(address, name, password), TelinkMeshPythonCallback(self_, address, name, password) {}
     
     ~TelinkLightPythonCallback() {}
     
@@ -95,31 +143,6 @@ namespace telink {
      *  \param packet : decrypted packet to be parsed.
      */
     virtual void parse_scenario_report(const std::string & packet);
-    
-    /** \fn virtual void parse_time_report(const std::string & packet)
-     *  \brief Parses a command packet from a time report.
-     *  \param packet : decrypted packet to be parsed.
-     */
-    virtual void parse_time_report(const std::string & packet);
-    
-    /** \fn virtual void parse_address_report(const std::string & packet)
-     *  \brief Parses a command packet from an address report.
-     *  \param packet : decrypted packet to be parsed.
-     */
-    virtual void parse_address_report(const std::string & packet);
-    
-    /** \fn virtual void parse_device_info_report(const std::string & packet)
-     *  \brief Parses a command packet from a device info report.
-     *  \param packet : decrypted packet to be parsed.
-     */
-    virtual void parse_device_info_report(const std::string & packet);
-    
-    /** \fn virtual void parse_group_id_report(const std::string & packet)
-     *  \brief Parses a command packet from a group ID report.
-     *  \param packet : decrypted packet to be parsed.
-     */
-    virtual void parse_group_id_report(const std::string & packet);
-    
   };
   
 }
