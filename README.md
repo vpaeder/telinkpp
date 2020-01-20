@@ -24,6 +24,8 @@ Device replies are treated minimally to demonstrate what data packets contain. Q
 - Intel TinyB - https://github.com/intel-iot-devkit/tinyb
 - OpenSSL - https://www.openssl.org
 - CMake (for compilation, optional) - https://cmake.org
+- Python 2.x or 3.x (for Python wrapper, optional) - https://python.org
+- Boost Python (for Python wrapper, optional) - https://boost.org
 - Doxygen (for docs, optional) - http://doxygen.nl
 
 Note that you need a system on which TinyB works. In practice this means some blend of Linux with the BlueZ stack. I tested it on Raspbian Buster with BlueZ 5.50.
@@ -75,7 +77,8 @@ This can be a little longer. For the device I wanted to control, I had to use An
 One can do the same with a real phone, in which case steps 3-6 are not necessary.
 
 # Usage of Python wrapper
-The Python wrapper gives access to public methods of all C++ classes. To build it, invoke cmake with option `-DBUILD_PYTHON_WRAPPER=1`.
+The Python wrapper gives access to public methods of all C++ classes. To build it, invoke cmake with option `-DBUILD_PYTHON_WRAPPER=1`. It will build by default with Python 2 (tested to work on Raspbian Buster). To build with Python 3, add cmake option `-DBUILD_FOR_PYTHON_3=1`.
+
 For TelinkLight, Python callbacks can be set by creating a derived class. The following example shows how to overload `parse_online_status_report` in Python:
 ```
 from pytelink import TelinkLight
@@ -91,3 +94,4 @@ ml = MyLight("AA:BB:CC:DD:EE:FF", "DeviceName", "Password")
 ml.connect()
 ml.set_state(True) # turn light on
 ```
+In this example, `parse_online_status_report` is triggered after `connect()` and after `set_state(...)`. Similar overloads can be written for every callback. See documentation in telink_python.h for details.
