@@ -38,6 +38,8 @@ On command line, in source folder, type:
  $ cmake ..
  $ make
 ```
+To build documentation (doxygen required), add `-DBUILD_DOC=1` option to cmake.
+To build the Python wrapper, add `-DBUILD_PYTHON_WRAPPER=1`. Add `-DBUILD_FOR_PYTHON_3=1` to build for Python 3 instead of 2.
 
 # Usage of C++ classes
 At the moment I didn't write a compilation script to produce a library. Therefore one must take care of including the header and the cxx file in one's own source tree.
@@ -77,7 +79,7 @@ This can be a little longer. For the device I wanted to control, I had to use An
 One can do the same with a real phone, in which case steps 3-6 are not necessary.
 
 # Usage of Python wrapper
-The Python wrapper gives access to public methods of all C++ classes. To build it, invoke cmake with option `-DBUILD_PYTHON_WRAPPER=1`. It will build by default with Python 2 (tested to work on Raspbian Buster). To build with Python 3, add cmake option `-DBUILD_FOR_PYTHON_3=1`.
+The Python wrapper gives access to public methods of all C++ classes. To build it, invoke cmake with option `-DBUILD_PYTHON_WRAPPER=1`. It will build by default with Python 2 (tested to work on Raspbian Buster). To build with Python 3, add cmake option `-DBUILD_FOR_PYTHON_3=1` (not tested).
 
 For TelinkLight, Python callbacks can be set by creating a derived class. The following example shows how to overload `parse_online_status_report` in Python:
 ```
