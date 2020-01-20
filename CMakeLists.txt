@@ -22,14 +22,16 @@ set (CMAKE_CXX_FLAGS_DEBUG "${CMAKE_CXX_FLAGS} -g -DDEBUG")
 set (CMAKE_CXX_FLAGS_RELEASE "${CMAKE_CXX_FLAGS} -O3")
 set (CMAKE_EXE_LINKER_FLAGS "${CMAKE_EXE_LINKER_FLAGS} -L/usr/local/lib")
 
-add_library ( telink_light_o STATIC telink_mesh.cxx telink_light.cxx )
-target_include_directories( telink_light_o PUBLIC ${TINYB_INCLUDE_DIRS} ${OPENSSL_INCLUDE_DIR})
-target_link_libraries(telink_light_o ${TINYB_LIBRARIES} ${OPENSSL_CRYPTO_LIBRARIES})
+add_library ( telink_light_o OBJECT telink_mesh.cxx telink_light.cxx )
+target_include_directories(telink_light_o PUBLIC ${TINYB_INCLUDE_DIRS} ${OPENSSL_INCLUDE_DIR})
+
+add_library(telinkpp SHARED $<TARGET_OBJECTS:telink_light_o>)
+target_link_libraries(telinkpp telink_light_o ${TINYB_LIBRARIES} ${OPENSSL_CRYPTO_LIBRARIES})
+install(TARGETS telinkpp DESTINATION lib)
 
 add_executable(telink_test telink_test.cxx)
-
-target_include_directories(telink_test PUBLIC ${TINYB_INCLUDE_DIRS} ${OPENSSL_INCLUDE_DIR})
-target_link_libraries(telink_test telink_light_o ${TINYB_LIBRARIES} ${OPENSSL_CRYPTO_LIBRARIES})
+target_link_libraries(telink_test telinkpp ${TINYB_LIBRARIES} ${OPENSSL_CRYPTO_LIBRARIES})
+install(TARGETS telink_test DESTINATION bin)
 
 IF (BUILD_PYTHON_WRAPPER)
   add_subdirectory(pytelink)
