@@ -46,7 +46,7 @@ namespace telink {
   }
   
   std::string TelinkColor::get_bytes() const {
-    return {this->brightness, this->R, this->G, this->B, this->Y, this->W, 0, 0};
+    return {schar(this->brightness), schar(this->R), schar(this->G), schar(this->B), schar(this->Y), schar(this->W), 0, 0};
   }
   
   
@@ -74,44 +74,20 @@ namespace telink {
   }
   
   std::string TelinkScenario::get_bytes(int color_index) const {
-    std::string packet = {0, color_index == this->colors.size()-1, static_cast<char>(0x10 + this->speeds[color_index]), static_cast<char>(0x10*color_index + this->colors.size())};
+    std::string packet = {0, color_index == this->colors.size()-1, schar(0x10 + this->speeds[color_index]), schar(0x10*color_index + this->colors.size())};
     return packet + this->colors[color_index].get_bytes();
-  }
-  
-  
-  void TelinkLight::query_groups() {
-    this->send_packet(COMMAND_GROUP_ID_QUERY, {0x0A, 0x01});
-  }
-  
-  void TelinkLight::query_time() {
-    this->send_packet(COMMAND_TIME_QUERY, {0x10});
   }
   
   void TelinkLight::query_alarm() {
     this->send_packet(COMMAND_ALARM_QUERY, {0x10});
   }
   
-  void TelinkLight::query_device_info() {
-    this->send_packet(COMMAND_DEVICE_INFO_QUERY, {0x10});
-  }
-  
-  void TelinkLight::query_device_version() {
-    this->send_packet(COMMAND_DEVICE_INFO_QUERY, {0x10, 0x02});
-  }
-  
   void TelinkLight::query_scenario(unsigned char scenario_id) {
-    this->send_packet(COMMAND_SCENARIO_QUERY, {0, 0, scenario_id, 0xff});
+    this->send_packet(COMMAND_SCENARIO_QUERY, {0, 0, schar(scenario_id), schar(0xff)});
   }
   
   void TelinkLight::query_status() {
     this->send_packet(COMMAND_STATUS_QUERY, {0x10});
-  }
-  
-  void TelinkLight::set_time() {
-    time_t now = std::time( 0 );
-    tm *ltm = std::localtime( &now );
-    int year = 1900 + ltm->tm_year;
-    this->send_packet(COMMAND_TIME_SET, {static_cast<char>(year & 0xff), static_cast<char>(year >> 8), static_cast<char>(ltm->tm_mon + 1), static_cast<char>(ltm->tm_mday), static_cast<char>(ltm->tm_hour), static_cast<char>(ltm->tm_min), static_cast<char>(ltm->tm_sec)});
   }
   
   void TelinkLight::set_temperature(int temperature) {
@@ -126,34 +102,17 @@ namespace telink {
     this->send_packet(COMMAND_LIGHT_ON_OFF, {on_off, 0, 0});
   }
   
-  void TelinkLight::set_mesh_id(int mesh_id) {
-    TelinkMesh::set_mesh_id(mesh_id);
-    this->send_packet(COMMAND_ADDRESS_EDIT, {static_cast<char>(mesh_id & 0xff), static_cast<char>((mesh_id >> 8) & 0xff)});
-  }
-  
-  void TelinkLight::query_mesh_id() {
-    this->send_packet(COMMAND_ADDRESS_EDIT, {0xff, 0xff});
-  }
-  
-  void TelinkLight::add_group(unsigned char group_id) {
-    this->send_packet(COMMAND_GROUP_EDIT, {0x01, group_id, 0x80});
-  }
-  
-  void TelinkLight::delete_group(unsigned char group_id) {
-    this->send_packet(COMMAND_GROUP_EDIT, {0x00, group_id, 0x80});
-  }
-  
   void TelinkLight::add_scenario(unsigned char scenario_id) {
-    this->send_packet(COMMAND_SCENARIO_EDIT, {0x01, scenario_id});
+    this->send_packet(COMMAND_SCENARIO_EDIT, {0x01, schar(scenario_id)});
   }
   
   void TelinkLight::delete_scenario(unsigned char scenario_id) {
-    this->send_packet(COMMAND_SCENARIO_EDIT, {0x00, scenario_id});
+    this->send_packet(COMMAND_SCENARIO_EDIT, {0x00, schar(scenario_id)});
   }
   
   void TelinkLight::set_brightness(int brightness) {
     this->brightness = std::min(100, std::max(brightness, 0));
-    this->send_packet(COMMAND_LIGHT_ATTRIBUTES_SET, {this->brightness, 0, 0, 0, 0, 0, 0, 1});
+    this->send_packet(COMMAND_LIGHT_ATTRIBUTES_SET, {schar(this->brightness), 0, 0, 0, 0, 0, 0, 1});
   }
 
   void TelinkLight::set_color(unsigned char R, unsigned char G, unsigned char B) {
@@ -168,12 +127,12 @@ namespace telink {
   }
   
   void TelinkLight::load_scenario(unsigned char scenario_id, unsigned char speed) {
-    this->send_packet(COMMAND_SCENARIO_LOAD, {scenario_id, speed, this->brightness});
+    this->send_packet(COMMAND_SCENARIO_LOAD, {schar(scenario_id), schar(speed), schar(this->brightness)});
   }
   
   void TelinkLight::set_alarm(unsigned char alarm_id, const std::vector<bool> & weekdays, unsigned char hour, unsigned char minute, unsigned char second, unsigned char action) {
     unsigned char action_code;
-    std::string data = {2, alarm_id, 0, 0, 0, hour, minute, second, 0, 0};
+    std::string data = {2, schar(alarm_id), 0, 0, 0, schar(hour), schar(minute), schar(second), 0, 0};
     if (action == 0 || action == 1) {
       data[2] = 0x90 + action;
     } else {
@@ -188,11 +147,11 @@ namespace telink {
   }
   
   void TelinkLight::set_alarm(unsigned char alarm_id, bool state) {
-    this->send_packet(COMMAND_ALARM_EDIT, {state ? '\3' : '\4', alarm_id});
+    this->send_packet(COMMAND_ALARM_EDIT, {state ? '\3' : '\4', schar(alarm_id)});
   }
   
   void TelinkLight::delete_alarm(unsigned char alarm_id) {
-    this->send_packet(COMMAND_ALARM_EDIT, {1, alarm_id});
+    this->send_packet(COMMAND_ALARM_EDIT, {1, schar(alarm_id)});
   }
   
   void TelinkLight::edit_scenario(unsigned char scenario_id, TelinkScenario & scenario) {
@@ -218,26 +177,6 @@ namespace telink {
     unsigned char W = packet[15];
   }
   
-  void TelinkLight::parse_time_report(const std::string & packet) {
-    unsigned int year = packet[10] + (packet[11] << 8);
-    unsigned char month = packet[12];
-    unsigned char day = packet[13];
-    unsigned char hour = packet[14];
-    unsigned char minute = packet[15];
-    unsigned char second = packet[16];
-    char timestamp[9], datestamp[9];
-    std::sprintf( timestamp, "%02d:%02d:%02d", hour, minute, second );
-    std::sprintf( datestamp, "%04d-%02d-%02d", year, month, day );
-    std::cout << "Lamp date: " << datestamp << ", time: " << timestamp << std::endl;
-  }
-  
-  void TelinkLight::parse_address_report(const std::string & packet) {
-    unsigned char mesh_id = packet[10];
-    std::vector<unsigned char> mac_address(6);
-    for (int i=0; i<6; i++)
-      mac_address[i] = packet[12+i];
-  }
-  
   void TelinkLight::parse_alarm_report(const std::string & packet) {
     int alarm_count = packet[19];
     unsigned char alarm_id = packet[11];
@@ -259,20 +198,6 @@ namespace telink {
     // packet[10] seems to always contain 0xA5
   }
   
-  void TelinkLight::parse_device_info_report(const std::string & packet) {
-    // unfortunately, no code or datasheet seems to be available to explain
-    // the content of these packets, except for the 2 conditions below
-    if (packet[19] == 0) { // packet contains device info
-    } else if (packet[19] == 2) { // packet contains device version
-    }
-  }
-  
-  void TelinkLight::parse_group_id_report(const std::string & packet) {
-    std::vector<unsigned char> groups(10);
-    for (int i=0; i<10; i++)
-      groups[i] = packet[10+i];
-  }
-  
   void TelinkLight::parse_scenario_report(const std::string & packet) {
     int scenario_size = packet[12] & 0xf;
     int scenario_id = packet[10];
@@ -287,47 +212,25 @@ namespace telink {
   }
   
   void TelinkLight::parse_command(const std::string & packet) {
-    unsigned int received_id;
-    if (packet[7] == COMMAND_ONLINE_STATUS_REPORT) {
-      received_id = packet[10];
-      if (this->mesh_id == 0)
-        this->mesh_id = received_id;
-    } else {
-      received_id = packet[3];
-    }
-    
-    if (this->mesh_id == received_id || received_id == 0) {
-      // NOTE: from specs, received_id == 0xffff targets all connected devices,
-      //  but presently received_id will never exceed 0xff.
-      // received_id == 0 targets the connected device only
-      
-      if (packet[7] == COMMAND_ONLINE_STATUS_REPORT) {
+    if (this->check_packet_validity(packet)) {
+      if (static_cast<unsigned char>(packet[7]) == COMMAND_ONLINE_STATUS_REPORT) {
         this->parse_online_status_report(packet);
       
-      } else if (packet[7] == COMMAND_STATUS_REPORT) {
+      } else if (static_cast<unsigned char>(packet[7]) == COMMAND_STATUS_REPORT) {
         this->parse_status_report(packet);
         
-      } else if (packet[7] == COMMAND_TIME_REPORT) {
-        this->parse_time_report(packet);
-        
-      } else if (packet[7] == COMMAND_ADDRESS_REPORT) {
-        this->parse_address_report(packet);
-        
-      } else if (packet[7] == COMMAND_ALARM_REPORT) {
+      } else if (static_cast<unsigned char>(packet[7]) == COMMAND_ALARM_REPORT) {
         this->parse_alarm_report(packet);
         
-      } else if (packet[7] == COMMAND_DEVICE_INFO_REPORT) {
-        this->parse_device_info_report(packet);
-        
-      } else if (packet[7] == COMMAND_GROUP_ID_REPORT) {
-        this->parse_group_id_report(packet);
-        
-      } else if (packet[7] == COMMAND_SCENARIO_REPORT) {
+      } else if (static_cast<unsigned char>(packet[7]) == COMMAND_SCENARIO_REPORT) {
         this->parse_scenario_report(packet);
       
+      } else {
+        TelinkMesh::parse_command(packet);
       }
     } 
   
   }
   
 }
+
