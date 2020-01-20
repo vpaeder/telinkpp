@@ -415,7 +415,9 @@ namespace telink {
     char timestamp[9], datestamp[9];
     std::sprintf( timestamp, "%02d:%02d:%02d", hour, minute, second );
     std::sprintf( datestamp, "%04d-%02d-%02d", year, month, day );
-    std::cout << "Lamp date: " << datestamp << ", time: " << timestamp << std::endl;
+    #ifdef DEBUG
+    std::cout << "Mesh date: " << datestamp << ", time: " << timestamp << std::endl;
+    #endif
   }
   
   void TelinkMesh::parse_address_report(const std::string & packet) {
