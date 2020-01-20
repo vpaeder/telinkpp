@@ -1,6 +1,6 @@
 cmake_minimum_required(VERSION 3.0)
 
-project(telink_light_cpp)
+project(telinkpp)
 
 option(BUILD_PYTHON_WRAPPER "Build Python wrapper" OFF)
 
