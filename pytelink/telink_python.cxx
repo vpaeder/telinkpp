@@ -54,23 +54,23 @@ namespace telink {
     call_python_callback(self, "parse_scenario_report", packet);
   }
 
-  void TelinkLightPythonCallback::parse_time_report(const std::string & packet) {
-    TelinkLight::parse_time_report(packet);
+  void TelinkMeshPythonCallback::parse_time_report(const std::string & packet) {
+    TelinkMesh::parse_time_report(packet);
     call_python_callback(self, "parse_time_report", packet);
   }
 
-  void TelinkLightPythonCallback::parse_address_report(const std::string & packet) {
-    TelinkLight::parse_address_report(packet);
+  void TelinkMeshPythonCallback::parse_address_report(const std::string & packet) {
+    TelinkMesh::parse_address_report(packet);
     call_python_callback(self, "parse_address_report", packet);
   }
 
-  void TelinkLightPythonCallback::parse_device_info_report(const std::string & packet) {
-    TelinkLight::parse_device_info_report(packet);
+  void TelinkMeshPythonCallback::parse_device_info_report(const std::string & packet) {
+    TelinkMesh::parse_device_info_report(packet);
     call_python_callback(self, "parse_device_info_report", packet);
   }
 
-  void TelinkLightPythonCallback::parse_group_id_report(const std::string & packet) {
-    TelinkLight::parse_group_id_report(packet);
+  void TelinkMeshPythonCallback::parse_group_id_report(const std::string & packet) {
+    TelinkMesh::parse_group_id_report(packet);
     call_python_callback(self, "parse_group_id_report", packet);
   }
   
