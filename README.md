@@ -75,7 +75,8 @@ This can be a little longer. For the device I wanted to control, I had to use An
 One can do the same with a real phone, in which case steps 3-6 are not necessary.
 
 # Usage of Python wrapper
-The Python wrapper gives access to public methods of all C++ classes. For TelinkLight, Python callbacks can be set by creating a derived class. The following example shows how to overload `parse_online_status_report` in Python:
+The Python wrapper gives access to public methods of all C++ classes. To build it, invoke cmake with option `-DBUILD_PYTHON_WRAPPER=1`.
+For TelinkLight, Python callbacks can be set by creating a derived class. The following example shows how to overload `parse_online_status_report` in Python:
 ```
 from pytelink import TelinkLight
 
