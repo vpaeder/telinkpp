@@ -30,7 +30,7 @@ namespace telink {
     /** \fn void set_alarm(unsigned char alarm_id, bp::list & list_weekdays, unsigned char hour, unsigned char minute, unsigned char second, unsigned char action)
      *  \brief Sets an alarm with given parameters.
      *  \param alarm_id : index of the alarm
-     *  \param weekdays : a list of 7 booleans representing which day the alarm is set on; starting index is Sunday
+     *  \param list_weekdays : a list of 7 booleans representing which day the alarm is set on; starting index is Sunday
      *  \param hour : hour of the alarm
      *  \param minute : minute of the alarm
      *  \param second : second of the alarm
