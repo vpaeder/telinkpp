@@ -43,8 +43,9 @@ To build documentation (doxygen required), add `-DBUILD_DOC=1` option to cmake.
 To build the Python wrapper, add `-DBUILD_PYTHON_WRAPPER=1`. Add `-DBUILD_FOR_PYTHON_3=1` to build for Python 3 instead of 2.
 
 # Usage of C++ classes
-At the moment I didn't write a compilation script to produce a library. Therefore one must take care of including the header and the cxx file in one's own source tree.
 For details on class methods and features, see documentation in doc folder.
+
+When building a project that requires `telinkpp`, remember to add it to the list of dependencies.
 
 # Usage of example program
 ` $ sudo ./telink_test <device_MAC_address> <device_name> <device_password>`
