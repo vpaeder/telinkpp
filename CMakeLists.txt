@@ -48,5 +48,5 @@ IF (DOXYGEN_FOUND AND BUILD_DOC)
 		COMMENT "Generating API documentation with Doxygen"
 		VERBATIM )
 		
-		install( DIRECTORY ${CMAKE_CURRENT_BINARY_DIR}/doc/html DESTINATION share/doc/telink_light )
+		install( DIRECTORY ${CMAKE_CURRENT_BINARY_DIR}/doc/html DESTINATION share/doc/telinkpp )
 ENDIF()
