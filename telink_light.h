@@ -15,26 +15,11 @@ namespace telink {
   #define COMMAND_SCENARIO_REPORT       0xC1
   #define COMMAND_SCENARIO_LOAD         0xF2
   #define COMMAND_SCENARIO_EDIT         0xF3
-  #define COMMAND_OTA_UPDATE            0xC6
-  #define COMMAND_QUERY_OTA_STATE       0xC7
-  #define COMMAND_OTA_STATUS_REPORT     0xC8
-  #define COMMAND_GROUP_ID_QUERY        0xDD
-  #define COMMAND_GROUP_ID_REPORT       0xD4
-  #define COMMAND_GROUP_EDIT            0xD7
   #define COMMAND_STATUS_QUERY          0xDA
   #define COMMAND_STATUS_REPORT         0xDB
-  #define COMMAND_ONLINE_STATUS_REPORT  0xDC
-  #define COMMAND_ADDRESS_EDIT          0xE0
-  #define COMMAND_ADDRESS_REPORT        0xE1
-  #define COMMAND_RESET                 0xE3
-  #define COMMAND_TIME_QUERY            0xE8
-  #define COMMAND_TIME_REPORT           0xE9
-  #define COMMAND_TIME_SET              0xE4
   #define COMMAND_ALARM_QUERY           0xE6
   #define COMMAND_ALARM_REPORT          0xE7
   #define COMMAND_ALARM_EDIT            0xE5
-  #define COMMAND_DEVICE_INFO_QUERY     0xEA
-  #define COMMAND_DEVICE_INFO_REPORT    0xEB
   #define COMMAND_LIGHT_ON_OFF          0xF0
   #define COMMAND_LIGHT_ATTRIBUTES_SET  0xF1
 
@@ -281,35 +266,10 @@ namespace telink {
      */
     TelinkLight(const std::string address, const std::string name, const std::string password) : TelinkMesh(address, name, password) {}
     
-    /** \fn void query_groups()
-     *  \brief Queries mesh group IDs from device.
-     */
-    void query_groups();
-    
-    /** \fn void set_time()
-     *  \brief Sets device date and time.
-     */
-    void set_time();
-    
-    /** \fn void query_time()
-     *  \brief Queries device date and time.
-     */
-    void query_time();
-    
     /** \fn void query_alarm()
      *  \brief Queries alarm status from device.
      */
     void query_alarm();
-    
-    /** \fn void query_device_info()
-     *  \brief Queries device information.
-     */
-    void query_device_info();
-    
-    /** \fn void query_device_version()
-     *  \brief Queries device firmware version.
-     */
-    void query_device_version();
     
     /** \fn void query_scenario(unsigned char scenario_id)
      *  \brief Queries scenario details from device.
@@ -322,35 +282,12 @@ namespace telink {
      */
     void query_status();
     
-    /** \fn void query_mesh_id()
-     *  \brief Queries mesh ID from device.
-     */
-    void query_mesh_id();
-    
     /** \fn void set_state(bool on_off)
      *  \brief Sets device power state.
      *  \param on_off : state to set (true = on, false = off)
      */
     void set_state(bool on_off);
     
-    /** \fn void set_mesh_id(int mesh_id) override
-     *  \brief Sets device mesh ID.
-     *  \param mesh_id : mesh ID to set, from 1 to 254 for single device ID, and from 0x8000 to 0x80ff for group ID
-     */
-    void set_mesh_id(int mesh_id) override;
-    
-    /** \fn void add_group(unsigned char group_id)
-     *  \brief Adds device to given group.
-     *  \param group_id : ID of the group to add device to.
-     */
-    void add_group(unsigned char group_id);
-    
-    /** \fn void delete_group(unsigned char group_id)
-     *  \brief Removes device from given group.
-     *  \param group_id : ID of the group to remove device from.
-     */
-    void delete_group(unsigned char group_id);
-   
     /** \fn void add_scenario(unsigned char scenario_id)
      *  \brief Adds given scenario to device.
      *  \param scenario_id : ID of the scenario to add to device.
@@ -439,35 +376,11 @@ namespace telink {
      */
     virtual void parse_status_report(const std::string & packet);
     
-    /** \fn virtual void parse_time_report(const std::string & packet)
-     *  \brief Parses a command packet from a time report.
-     *  \param packet : decrypted packet to be parsed.
-     */
-    virtual void parse_time_report(const std::string & packet);
-    
-    /** \fn virtual void parse_address_report(const std::string & packet)
-     *  \brief Parses a command packet from an address report.
-     *  \param packet : decrypted packet to be parsed.
-     */
-    virtual void parse_address_report(const std::string & packet);
-    
     /** \fn virtual void parse_alarm_report(const std::string & packet)
      *  \brief Parses a command packet from an alarm report.
      *  \param packet : decrypted packet to be parsed.
      */
     virtual void parse_alarm_report(const std::string & packet);
-    
-    /** \fn virtual void parse_device_info_report(const std::string & packet)
-     *  \brief Parses a command packet from a device info report.
-     *  \param packet : decrypted packet to be parsed.
-     */
-    virtual void parse_device_info_report(const std::string & packet);
-    
-    /** \fn virtual void parse_group_id_report(const std::string & packet)
-     *  \brief Parses a command packet from a group ID report.
-     *  \param packet : decrypted packet to be parsed.
-     */
-    virtual void parse_group_id_report(const std::string & packet);
     
     /** \fn virtual void parse_scenario_report(const std::string & packet)
      *  \brief Parses a command packet from a scenario report.
