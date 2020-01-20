@@ -148,10 +148,9 @@ void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="clas
 void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classtelink_1_1_telink_light.html#ae8076cddaf11493643a15d365b80358d">query_device_version</a> ()</td></tr>
 <tr class="memdesc:ae8076cddaf11493643a15d365b80358d"><td class="mdescLeft">&#160;</td><td class="mdescRight">Queries device firmware version. <br /></td></tr>
 <tr class="separator:ae8076cddaf11493643a15d365b80358d"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:ab85030f5ea7a638118d2fdba5878fa0a"><td class="memItemLeft" align="right" valign="top"><a id="ab85030f5ea7a638118d2fdba5878fa0a"></a>
-void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classtelink_1_1_telink_light.html#ab85030f5ea7a638118d2fdba5878fa0a">query_scenarios</a> ()</td></tr>
-<tr class="memdesc:ab85030f5ea7a638118d2fdba5878fa0a"><td class="mdescLeft">&#160;</td><td class="mdescRight">Queries scenarios from device. <br /></td></tr>
-<tr class="separator:ab85030f5ea7a638118d2fdba5878fa0a"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:aa90fb428a0d89bdff081ea6261e79287"><td class="memItemLeft" align="right" valign="top">void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classtelink_1_1_telink_light.html#aa90fb428a0d89bdff081ea6261e79287">query_scenario</a> (unsigned char scenario_id)</td></tr>
+<tr class="memdesc:aa90fb428a0d89bdff081ea6261e79287"><td class="mdescLeft">&#160;</td><td class="mdescRight">Queries scenario details from device.  <a href="classtelink_1_1_telink_light.html#aa90fb428a0d89bdff081ea6261e79287">More...</a><br /></td></tr>
+<tr class="separator:aa90fb428a0d89bdff081ea6261e79287"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:a73bea50db51810023449de5da0cad893"><td class="memItemLeft" align="right" valign="top"><a id="a73bea50db51810023449de5da0cad893"></a>
 void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classtelink_1_1_telink_light.html#a73bea50db51810023449de5da0cad893">query_status</a> ()</td></tr>
 <tr class="memdesc:a73bea50db51810023449de5da0cad893"><td class="mdescLeft">&#160;</td><td class="mdescRight">Queries device status. <br /></td></tr>
@@ -850,6 +849,32 @@ int&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="class
 <dl class="params"><dt>Parameters</dt><dd>
   <table class="params">
     <tr><td class="paramname">packet</td><td>: decrypted packet to be parsed. </td></tr>
+  </table>
+  </dd>
+</dl>
+
+</div>
+</div>
+<a id="aa90fb428a0d89bdff081ea6261e79287"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#aa90fb428a0d89bdff081ea6261e79287">&#9670;&nbsp;</a></span>query_scenario()</h2>
+
+<div class="memitem">
+<div class="memproto">
+      <table class="memname">
+        <tr>
+          <td class="memname">void telink::TelinkLight::query_scenario </td>
+          <td>(</td>
+          <td class="paramtype">unsigned char&#160;</td>
+          <td class="paramname"><em>scenario_id</em></td><td>)</td>
+          <td></td>
+        </tr>
+      </table>
+</div><div class="memdoc">
+
+<p>Queries scenario details from device. </p>
+<dl class="params"><dt>Parameters</dt><dd>
+  <table class="params">
+    <tr><td class="paramname">scenario_id</td><td>: index of scenario to get details of </td></tr>
   </table>
   </dd>
 </dl>

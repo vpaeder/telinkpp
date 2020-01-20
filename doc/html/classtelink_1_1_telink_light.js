@@ -22,7 +22,7 @@ var classtelink_1_1_telink_light =
     [ "query_device_version", "classtelink_1_1_telink_light.html#ae8076cddaf11493643a15d365b80358d", null ],
     [ "query_groups", "classtelink_1_1_telink_light.html#a3fca23a992a13daada2612a2856f2297", null ],
     [ "query_mesh_id", "classtelink_1_1_telink_light.html#a8c48180ba63a8b914d09499064b4e463", null ],
-    [ "query_scenarios", "classtelink_1_1_telink_light.html#ab85030f5ea7a638118d2fdba5878fa0a", null ],
+    [ "query_scenario", "classtelink_1_1_telink_light.html#aa90fb428a0d89bdff081ea6261e79287", null ],
     [ "query_status", "classtelink_1_1_telink_light.html#a73bea50db51810023449de5da0cad893", null ],
     [ "query_time", "classtelink_1_1_telink_light.html#a838f435dd61c487fa23f18f10df26a9e", null ],
     [ "set_alarm", "classtelink_1_1_telink_light.html#a5d72356440274e1048f84787692cea67", null ],

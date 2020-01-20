@@ -5,7 +5,7 @@
 <meta http-equiv="X-UA-Compatible" content="IE=9"/>
 <meta name="generator" content="Doxygen 1.8.16"/>
 <meta name="viewport" content="width=device-width, initial-scale=1"/>
-<title>Telink Mesh Light C++ interface: Main Page</title>
+<title>Telink Mesh Light C++ interface: Summary</title>
 <link href="tabs.css" rel="stylesheet" type="text/css"/>
 <script type="text/javascript" src="jquery.js"></script>
 <script type="text/javascript" src="dynsections.js"></script>
@@ -76,7 +76,7 @@ var searchBox = new SearchBox("searchBox", "search",false,'Search');
 </div>
 <script type="text/javascript">
 /* @license magnet:?xt=urn:btih:cf05388f2679ee054f2beb29a391d25f4e673ac3&amp;dn=gpl-2.0.txt GPL-v2 */
-$(document).ready(function(){initNavTree('index.html','');});
+$(document).ready(function(){initNavTree('md__r_e_a_d_m_e.html','');});
 /* @license-end */
 </script>
 <div id="doc-content">
@@ -94,24 +94,49 @@ $(document).ready(function(){initNavTree('index.html','');});
 </iframe>
 </div>
 
-<div class="header">
+<div class="PageDoc"><div class="header">
   <div class="headertitle">
-<div class="title">Telink Mesh Light C++ interface Documentation</div>  </div>
+<div class="title">Summary </div>  </div>
 </div><!--header-->
 <div class="contents">
-<ul><li><a href="index.html"><span>Main&#160;Page</span></a>
-</li><li><a href="pages.html"><span>Related&#160;Pages</span></a>
-</li><li><a href="annotated.html"><span>Classes</span></a>
-<ul><li><a href="annotated.html"><span>Class&#160;List</span></a>
-</li><li><a href="classes.html"><span>Class&#160;Index</span></a>
-</li><li><a href="hierarchy.html"><span>Class&#160;Hierarchy</span></a>
-</li><li><a href="functions.html"><span>Class&#160;Members</span></a>
-</li></ul>
-</li><li><a href="files.html"><span>Files</span></a>
-<ul><li><a href="files.html"><span>File&#160;List</span></a>
-</li></ul>
-</li></ul>
-</div><!-- contents -->
+<div class="textblock"><p>This project provides C++ classes to handle a Bluetooth LE light with Telink mesh protocol. Telink chips can be found for instance in cheap connected light bulbs from Lidl (Livarno LUX brand), from Briloner Leuchten GmbH, or C by GE connected lighting.</p>
+<p>The command set is derived from Telink demo apps together with an analysis of the Briloner Control phone app. Since the app makes use of a subset of the available features and Telink's documentation on the subject is between absconse and inexistant, it is probable that some features will never be implemented.</p>
+<p>Parts of the key exchange and packet encryption/decryption routines are inspired from <a href="https://github.com/google/python-dimond">https://github.com/google/python-dimond</a> .</p>
+<h4>Implemented features</h4>
+<ul>
+<li>power on/off</li>
+<li>change brightness</li>
+<li>change color / temperature</li>
+<li>set alarms</li>
+<li>edit custom scenarios</li>
+<li>select scenarios</li>
+<li>device groups (use mesh ID 0x8000 + group ID to communicate with defined groups)</li>
+</ul>
+<h4>Not implemented</h4>
+<ul>
+<li>device reset</li>
+<li>OTA operations</li>
+</ul>
+<p>Device replies are treated minimally to demonstrate what data packets contain. Queries are treated asynchronously.</p>
+<h1>Requirements</h1>
+<ul>
+<li>Intel TinyB - <a href="https://github.com/intel-iot-devkit/tinyb">https://github.com/intel-iot-devkit/tinyb</a></li>
+<li>OpenSSL - <a href="https://www.openssl.org">https://www.openssl.org</a></li>
+<li>CMake (for compilation, optional) - <a href="https://cmake.org">https://cmake.org</a></li>
+<li>Doxygen (for docs, optional) - <a href="http://doxygen.nl">http://doxygen.nl</a></li>
+</ul>
+<p>Note that you need a system on which TinyB works. In practice this means some blend of Linux with the BlueZ stack. I tested it on Raspbian.</p>
+<h1>Compiling</h1>
+<p>This can be done easily with CMake using the provided CMakeLists.txt file. On command line, in source folder, type: </p><div class="fragment"><div class="line">$ mkdir build &amp;&amp; cd build</div>
+<div class="line">$ cmake ..</div>
+<div class="line">$ make</div>
+</div><!-- fragment --><h1>Usage of C++ classes</h1>
+<p>At the moment I didn't write a compilation script to produce a library. Therefore one must take care of including the header and the cxx file in one's own source tree. For details on class methods and features, see documentation in doc folder.</p>
+<h1>Usage of example program</h1>
+<p><code>$ sudo ./telink_test &lt;device_MAC_address&gt; &lt;device_name&gt; &lt;device_password&gt;</code></p>
+<p>Device MAC address can be found by scanning for Bluetooth devices. Device name and password depend on brand and model. Factory defaults proposed by Telink are <em>telink_mesh1</em> and <em>123</em>. </p>
+</div></div><!-- contents -->
+</div><!-- PageDoc -->
 </div><!-- doc-content -->
 <!-- start footer part -->
 <div id="nav-path" class="navpath"><!-- id is needed for treeview function! -->
