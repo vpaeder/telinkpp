@@ -45,7 +45,7 @@ To build the Python wrapper, add `-DBUILD_PYTHON_WRAPPER=1`. Add `-DBUILD_FOR_PY
 # Usage of C++ classes
 For details on class methods and features, see documentation in doc folder.
 
-When building a project that requires `telinkpp`, remember to add it to the list of dependencies.
+When building a project that requires `telinkpp`, remember to add it to the list of dependencies. Header files are installed in the subdirectory `telinkpp` of the *include* folder.
 
 # Usage of example program
 ` $ sudo ./telink_test <device_MAC_address> <device_name> <device_password>`
