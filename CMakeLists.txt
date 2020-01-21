@@ -32,7 +32,6 @@ add_library(telinkpp SHARED $<TARGET_OBJECTS:telink_light_o>)
 target_link_libraries(telinkpp telink_light_o ${TINYB_LIBRARIES} ${OPENSSL_CRYPTO_LIBRARIES})
 set_target_properties(telinkpp PROPERTIES VERSION ${PROJECT_VERSION})
 file(GLOB HEADERS *.h)
-message(STATUS ${HEADERS})
 install(TARGETS telinkpp LIBRARY DESTINATION ${CMAKE_INSTALL_LIBDIR})
 install(FILES ${HEADERS} DESTINATION ${CMAKE_INSTALL_INCLUDEDIR}/telinkpp)
 
