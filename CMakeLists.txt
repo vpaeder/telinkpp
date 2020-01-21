@@ -1,6 +1,9 @@
 cmake_minimum_required(VERSION 3.0)
 
-project(telinkpp)
+project(telinkpp
+	VERSION "0.1.0"
+	LANGUAGES CXX
+)
 
 option(BUILD_PYTHON_WRAPPER "Build Python wrapper" OFF)
 
@@ -27,6 +30,7 @@ target_include_directories(telink_light_o PUBLIC ${TINYB_INCLUDE_DIRS} ${OPENSSL
 
 add_library(telinkpp SHARED $<TARGET_OBJECTS:telink_light_o>)
 target_link_libraries(telinkpp telink_light_o ${TINYB_LIBRARIES} ${OPENSSL_CRYPTO_LIBRARIES})
+set_target_properties(telinkpp PROPERTIES VERSION ${PROJECT_VERSION})
 install(TARGETS telinkpp DESTINATION lib)
 
 add_executable(telink_test telink_test.cxx)
