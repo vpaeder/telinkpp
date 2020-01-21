@@ -31,7 +31,10 @@ target_include_directories(telink_light_o PUBLIC ${TINYB_INCLUDE_DIRS} ${OPENSSL
 add_library(telinkpp SHARED $<TARGET_OBJECTS:telink_light_o>)
 target_link_libraries(telinkpp telink_light_o ${TINYB_LIBRARIES} ${OPENSSL_CRYPTO_LIBRARIES})
 set_target_properties(telinkpp PROPERTIES VERSION ${PROJECT_VERSION})
-install(TARGETS telinkpp DESTINATION lib)
+file(GLOB HEADERS *.h)
+message(STATUS ${HEADERS})
+install(TARGETS telinkpp LIBRARY DESTINATION ${CMAKE_INSTALL_LIBDIR})
+install(FILES ${HEADERS} DESTINATION ${CMAKE_INSTALL_INCLUDEDIR}/telinkpp)
 
 add_executable(telink_test telink_test.cxx)
 target_link_libraries(telink_test telinkpp ${TINYB_LIBRARIES} ${OPENSSL_CRYPTO_LIBRARIES})
