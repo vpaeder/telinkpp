@@ -25,7 +25,7 @@ namespace telink {
      *  \param name : device name.
      *  \param password : device password.
      */
-    TelinkLightPython(const std::string address, const std::string name, const std::string password) : TelinkLight(address, name, password) {}
+    TelinkLightPython(const std::string & address, const std::string & name, const std::string & password) : TelinkLight(address, name, password) {}
     
     /** \fn void set_alarm(unsigned char alarm_id, bp::list & list_weekdays, unsigned char hour, unsigned char minute, unsigned char second, unsigned char action)
      *  \brief Sets an alarm with given parameters.
@@ -65,7 +65,7 @@ namespace telink {
     *  \param name : device name.
     *  \param password : device password.
     */
-   TelinkMeshPythonCallback(PyObject *self_, const std::string address, const std::string name, const std::string password) : self(self_), TelinkMesh(address, name, password) {
+   TelinkMeshPythonCallback(PyObject *self_, const std::string & address, const std::string & name, const std::string & password) : self(self_), TelinkMesh(address, name, password) {
      if (!PyEval_ThreadsInitialized())
        PyEval_InitThreads();
    }
@@ -116,7 +116,7 @@ namespace telink {
      *  \param name : device name.
      *  \param password : device password.
      */
-    TelinkLightPythonCallback(PyObject *self_, const std::string address, const std::string name, const std::string password) : self(self_), TelinkLightPython(address, name, password), TelinkMeshPythonCallback(self_, address, name, password) {}
+    TelinkLightPythonCallback(PyObject *self_, const std::string & address, const std::string & name, const std::string & password) : self(self_), TelinkLightPython(address, name, password), TelinkMeshPythonCallback(self_, address, name, password) {}
     
     ~TelinkLightPythonCallback() {}
     
