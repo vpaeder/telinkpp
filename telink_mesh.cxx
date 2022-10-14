@@ -412,7 +412,7 @@ namespace telink {
     unsigned char hour = packet[14];
     unsigned char minute = packet[15];
     unsigned char second = packet[16];
-    char timestamp[9], datestamp[9];
+    char timestamp[9], datestamp[11];
     std::sprintf( timestamp, "%02d:%02d:%02d", hour, minute, second );
     std::sprintf( datestamp, "%04d-%02d-%02d", year, month, day );
     #ifdef DEBUG
